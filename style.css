@@ -1,24 +1,32 @@
 body{
-	background:#000000;
-	color:#00FF00;
-	font-family:monospace;
-  font:12px 'Menlo', 'Lucida Console' , Courier, monospace;
+	background : #000000;
+	color : #00FF00;
+	font-family : monospace;
+  font : 12px 'Menlo', 'Lucida Console' , Courier, monospace;
 }
 
 label {
-    float:left;
-    padding-top:2px;
+    float : left;
+    padding-top : 2px;
 }
 input {
-    cursor: url(cursor.cur);
-    background: #000000;
-    border:none;
-    color: white;
-    font:12px 'Menlo', 'Lucida Console' , Courier, monospace;
-    width:99%;
+    cursor : url(cursor.cur);
+    background : #000000;
+    border : none;
+    color : white;
+    font : 12px 'Menlo', 'Lucida Console' , Courier, monospace;
+    width : 99%;
 }
 
 .inputbox{
-    overflow:hidden;
-    padding-left:10px;
+    overflow : hidden;
+    padding-left : 10px;
+}
+
+#hideit {
+    display : none;
+}
+
+.ps { 
+    padding-top : 10px;
 }
