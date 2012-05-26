@@ -2,6 +2,7 @@ body{
 	background:#000000;
 	color:#00FF00;
 	font-family:monospace;
+  font:12px 'Menlo', 'Lucida Console' , Courier, monospace;
 }
 
 label {
@@ -11,7 +12,7 @@ label {
 input {
     cursor: url(cursor.cur);
     background: #000000;
-    border: none;
+    border:none;
     color: white;
     font:12px 'Menlo', 'Lucida Console' , Courier, monospace;
     width:99%;
