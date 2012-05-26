@@ -1,0 +1,35 @@
+* Content
+** blog
+** devlog
+** github
+** twitter
+
+* Commands
+** cd
+*** args - github repo name
+*** change dir into git repos
+
+** open
+*** args - github, blog, devlog, twitter
+*** open in new page 
+
+** help
+*** args - none
+*** print usage/help
+
+** ls
+*** args - none
+*** print github repo names
+
+** git log
+*** args - none
+*** condition - check if inside a repo
+*** print gitlog
+
+** clear
+*** args - none
+*** clear the page
+
+** whois
+** args - none
+** print name, id, website, bio
