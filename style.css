@@ -32,6 +32,7 @@ input {
 
 #arrow{
     color : #97C30A;
+    padding : 4px;
 }
 
 #dir {
@@ -56,8 +57,11 @@ input {
 
 #cmd {
     color : #FFFFFF;
-    padding-right: 5px;
 }
 #desc {
-    padding-left: 10px;
+    padding-left: 6px;
+}
+
+#doc {
+    color : #9C24A4;
 }

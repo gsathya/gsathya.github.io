@@ -26,10 +26,22 @@
 *** condition - check if inside a repo
 *** print gitlog
 
+** git branch 
+*** args - none
+*** condition - check if inside a repo
+*** print all branches
+
+** git checkout 
+*** args - branch name
+*** condition - check if inside a repo
+*** switch to branch
+
 ** clear
 *** args - none
 *** clear the page
 
-** whois
-** args - none
-** print name, id, website, bio
+** whoami
+*** args - none
+*** print name, id, website, bio
+
+
