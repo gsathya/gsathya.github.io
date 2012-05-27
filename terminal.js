@@ -44,8 +44,8 @@ function wrongCommand() {
 }
 
 function getRepos() {
-    $.getJSON('https://api.github.com/users/gsathya/repos', function( data ) {
-        $.each(data, function( i, item ) {
+    $.getJSON('https://api.github.com/users/gsathya/repos?callback=?', function( data ) {
+        $.each(data.data, function( i, item ) {            
             repos[item.name] = { 'desc': item.description, 'url': item.html_url };
         });
     });
@@ -124,8 +124,8 @@ function open() {
 
 function getBranches() {
     branches = [];
-    $.getJSON('https://api.github.com/repos/'+username+'/'+pwd+'/git/refs', function( data ) {
-        $.each(data, function( i, item ) {
+    $.getJSON('https://api.github.com/repos/'+username+'/'+pwd+'/git/refs?callback=?', function( data ) {
+        $.each(data.data, function( i, item ) {
             branches.push(item.ref.split('/')[2]);
         });
     });
