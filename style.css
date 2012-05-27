@@ -1,6 +1,6 @@
 body{
 	background : #000000;
-	color : #00FF00;
+	color : #C0BCB6;
 	font-family : monospace;
   font : 12px 'Menlo', 'Lucida Console' , Courier, monospace;
 }
@@ -10,10 +10,9 @@ label {
     padding-top : 2px;
 }
 input {
-    cursor : url(cursor.cur);
     background : #000000;
     border : none;
-    color : white;
+    color : #FFFFFF;
     font : 12px 'Menlo', 'Lucida Console' , Courier, monospace;
     width : 99%;
 }
@@ -29,4 +28,36 @@ input {
 
 .ps { 
     padding-top : 10px;
+}
+
+#arrow{
+    color : #97C30A;
+}
+
+#dir {
+    color : #1FBED6;
+}
+
+#dollar {
+    color : #F7E967;
+}
+
+#colon {
+    color : #447799;
+}
+
+#git {
+    color : #5288DB;
+}
+
+#branch {
+    color : #FF717E;
+}
+
+#cmd {
+    color : #FFFFFF;
+    padding-right: 5px;
+}
+#desc {
+    padding-left: 10px;
 }

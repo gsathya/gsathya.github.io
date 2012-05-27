@@ -1,0 +1,34 @@
+{
+    "commands": [
+        {
+            "name": "cd",
+            "args": "github repo name",
+            "gist": "change dir into git repos"
+        },
+        {
+            "name": "open",
+            "args": "github, blog, devlog, twitter",
+            "gist": "open in a new page"
+        },
+        {
+            "name": "ls",
+            "args": false,
+            "gist": "print all the github repo names"
+        },
+        {
+            "name": "git log",
+            "args": false,
+            "gist": "print the git log information"
+        },
+        {
+            "name": "clear",
+            "args": false,
+            "gist": "clear the screen"
+        },
+        {
+            "name": "help",
+            "args": false,
+            "gist": "print usage/help"
+        }
+    ]
+}
