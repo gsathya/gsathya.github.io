@@ -16,11 +16,6 @@
             "gist": "print all the github repo names"
         },
         {
-            "name": "git log",
-            "args": false,
-            "gist": "print the git log information"
-        },
-        {
             "name": "git branch",
             "args": false,
             "gist": "print all branches in repo"

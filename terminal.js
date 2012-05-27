@@ -152,7 +152,7 @@ function git_error() {
 }
 
 function git_log() {
-    $('.result:last').append('<div id="hideit" class="help"><p>still working it ...</p></div>');
+    $('.result:last').append('<div id="hideit" class="help"><p>still working on it ...</p></div>');
     $('.help').slideDown('fast');
     createPrompt();
 
