@@ -75,7 +75,7 @@ function ls(){
 }
 
 function whoami() {
-    whoami_blob = "nub kid, <3 neena";
+    whoami_blob = "Tor core dev, h4kx0r";
     whoami_dom = '<p><span id="cmd">'+whoami_blob+'</span></p>';
     $('.result:last').append('<div id="hideit" class="ls">'+whoami_dom+'</div>');
     $('.ls').slideDown('fast');
