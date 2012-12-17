@@ -1,0 +1,73 @@
+Sathyanarayanan Gunasekaran
+
+Email: gsathya@torproject.org
+Github: www.github.com/gsathya
+
+
+Work Experience
+===============
+
+Amazon, Software Development Engineer Intern - [May 2012, July 2012]
+
+Researched and implemented various optimizing methods to reduce load time and improve 
+the performance of Kindle Cloud Reader by more than 50%.
+
+
+Google Summer of Code, Student Contractor, Google - [May 2011, August 2011]
+
+Worked on Orbot, the Android port of Tor, to develop a new UI/UX such as a new setup 
+wizard and custom data stats; and an external library for other third-party apps to 
+route traffic through Tor. Orbot has upwards of 100,000 downloads on the Android market.
+
+Open Source Contributions
+-------------------------------------
+
+Tor Project, Developer - [Feb 2011, Present]
+
+I currently write tools to gather metrics on various features about the Tor 
+network. One such tool is Compass[0], written in Python, provides various filtering, 
+searching and grouping capabilities on various information about the Tor network
+and it's relays. Another tool I'm currently working on is Pyonionoo[1]
+which is a web service that provides an API for third party applications to learn more 
+about the Tor network.
+
+Previously, I worked on implementing features and fixing bugs in -
+* Orbot[2] - Android port of Tor.
+* Stem[3] - Stem is a library that provides Python bindings and utilities for using the 
+Tor control port.
+
+Projects
+========
+
+Slyer
+A static HTML site generator written in Python. It currently powers my devlog[4].
+
+github-in-a-terminal[5]
+A web app that emulates Github in the form of a command line interface, written using jQuery.
+
+TrainTrack
+Android app that lists the train schedules for the Chennai Mass Rapid Transit System.
+
+College
+-------
+Content based Ad-Classifier
+Ad-Classifier that uses SVM Multiclass algorithm to classify ads based on content. 
+
+Technical Skills
+================
+Languages - Python, C/C++, Java, Ruby, JavaScript
+Dev Environment - Unix, Git, Emacs, tmux
+
+
+Education
+=========
+
+BE, College of Engineering, Guindy, Anna University, India - [Aug 2009, May 2013]
+Pursuing a Bachelor of Engineering degree in Computer Science - CGPA 8.42/10.00
+
+[0]: https://compass.torproject.org
+[1]: https://onionoo.torproject.org
+[2]: https://gitweb.torproject.org/user/gsathya/orbot.git 
+[3]: https://gitweb.torproject.org/user/gsathya/stem.git 
+[4]: http://devlog.gsathya.in
+[5]: https://gsathya.github.com

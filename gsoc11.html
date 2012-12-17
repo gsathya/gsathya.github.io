@@ -1,0 +1,276 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<style>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #fff;
+    background-color: #282a36;
+    margin: 10px 13px 10px 13px;
+}
+table {
+	margin: 10px 0 15px 0;
+	border-collapse: collapse;
+}
+td,th {	
+	border: 1px solid #ddd;
+	padding: 3px 10px;
+}
+th {
+	padding: 5px 10px;	
+}
+a {
+    color: #59acf3;
+}
+a:hover {
+    color: #a7d8ff;
+    text-decoration: none;
+}
+a img {
+    border: none;
+}
+p {
+    margin-bottom: 9px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #fff;
+    line-height: 36px;
+}
+h1 {
+    margin-bottom: 18px;
+    font-size: 30px;
+}
+h2 {
+    font-size: 24px;
+}
+h3 {
+    font-size: 18px;
+}
+h4 {
+    font-size: 16px;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 13px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+blockquote {
+    padding: 13px 13px 21px 15px;
+    margin-bottom: 18px;
+    font-family:georgia,serif;
+    font-style: italic;
+}
+blockquote:before {
+    content:"\201C";
+    font-size:40px;
+    margin-left:-10px;
+    font-family:georgia,serif;
+    color:#eee;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-style: italic;
+}
+code, pre {
+    font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+code {
+	color: #ff4a14;
+    padding: 1px 3px;
+    font-size: 12px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+pre {
+    display: block;
+    padding: 14px;
+    margin: 0 0 18px;
+    line-height: 16px;
+    font-size: 11px;
+    border: 1px solid #bf370f;
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+pre code {
+    background-color: #282a36;
+    color: #ff4a14;
+    font-size: 11px;
+    padding: 0;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,h2,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+</style>
+<title>Google Summer of Code Proposal : Orbot & ORLib</title>
+
+</head>
+<body>
+<h2>Google Summer of Code Proposal : Orbot &amp; ORLib</h2>
+
+<p><em>Sathyanarayanan, India</em>
+<em>gsathya.ceg@gmail.com</em></p>
+
+<p>March 24 2011</p>
+
+<h4>What project would you like to work on?</h4>
+
+<p>I would like to work on Orbot and ORLib.</p>
+
+<h5>Orbot UI/UX</h5>
+
+<p>At the moment, the Orbot UI/UX is clustered and not very intuitive. I plan on improving the existing elements of the UI and also add a variety of new features such as</p>
+
+<ul>
+<li>A new Set - up Wizard (which checks for iptables)</li>
+<li>Improved LogView</li>
+<li>Changes to the preferences (should be made to follow the Android guidelines)</li>
+</ul>
+
+
+<p>I have already contacted my mentor (Nathan Freitas) and <a href="https://docs.google.com/document/d/1RKMNK-yn-co9eO0njE7D-Lv20S45YE0GqBFgVl-utqE/edit?hl=en&amp;authkey=CLHA_4IK">discussed</a> the various UI/UX improvements and <a href="https://github.com/guardianproject/Orbot/issues#issue/8">chalked</a>. out UI/UX wire frames.</p>
+
+<h5>Orbot Core app work</h5>
+
+<p>At the moment, Orbot displays a successful connection without actually checking the connection. This is a pressing issue, because the user is not notified if the set-up has failed, unless he/she manually checks the torcheck web service. This should be made automatic by making using of the TorCheck API. Also, Orbot should be configured to show more information about the data being transmitted such as -</p>
+
+<ul>
+<li>Amount of data transferred</li>
+<li>Quality of the connection</li>
+<li>Number of circuits connected</li>
+</ul>
+
+
+<h5>ORLib</h5>
+
+<p>Currently, ORLib is very minimal at the moment, both in term of features and support/documentation. ORLib is very critical to the use of Orbot as it provides transparent proxying on non-rooted devices ( A major chunk of android phones are un-rooted). I intend to -</p>
+
+<ul>
+<li><p>Improve the existing library by adding additional features</p>
+
+<ul>
+<li>Check if Orbot exists</li>
+<li>Check status of connection to Tor</li>
+<li>Provide option to start Orbot via intent</li>
+<li>Request hidden service by port, and get return hidden service .onion address</li>
+</ul>
+</li>
+<li><p>Create an ORLib enabled "Twitter, Status.net or other micro blogging Client" - A sort of primer for third-party apps</p></li>
+<li>Improve the documentation</li>
+</ul>
+
+
+<h5>Timeline</h5>
+
+<p>GSoC coding period starts on May 24 and ends on August 15 comprising a total of 12 weeks.</p>
+
+<h5>Orbot</h5>
+
+<p>Week 1 - Get comfortable with Orbot source + minor tweaks (such as updating info + links)</p>
+
+<p>Week 2 - Implement the new Set - Up Wizard</p>
+
+<p>Week 3 - Improve the LogView + other minor UI tweaks (such as preferences)</p>
+
+<p>Week 4 + Week 5 - Implement the various data statistics</p>
+
+<p>Week 6 - Testing and tuning based on user response</p>
+
+<h5>ORLib</h5>
+
+<p>Week 7 + Week 8 - Add features to the library</p>
+
+<p>Week 9 + Week 10 - Create an ORLib enabled App</p>
+
+<p>Week 11  - Documentation + Testing</p>
+
+<p>Week 12 - Code Cleanup</p>
+
+<h4>Point us to a code sample: something good and clean to demonstrate that you know what you're doing, ideally from an existing project.</h4>
+
+<p>I hacked up an android app for showing the timings/schedule of the local trains here in India for my personal use. The source for this can be found <a href="https://github.com/gsathya/TrainTrack">here</a>.</p>
+
+<p>I've also submitted a <a href="https://lists.mayfirst.org/pipermail/guardian-dev/2011-March/000167.html">patch</a> to <em>Orbot</em> which is under review at the moment.</p>
+
+<p>Also, I've made an bot for an IRC channel using Ruby. <a href="https://github.com/gsathya/Polkabot">Source</a></p>
+
+<h4>Why do you want to work with The Tor Project / EFF in particular?</h4>
+
+<p>I've always been very interested to Open source software development. I've been a big fan of android because of its open source morals. This was the main reason I took up android development. But, unfortunately I haven't had the chance to contribute to any open source project, until I found Orbot. I've been using Orbot on my phone for a while now and I've wanted to contribute back to the Tor community.</p>
+
+<p>The recent crackdown in Egypt and Iran, show how vital Tor is to millions of people around the world, and this means that the work I do is going to be used by people all over the world. I'm thrilled to be a part of such an organisation, and can't wait to get started.</p>
+
+<p>Oh and also, the <a href="https://www.torproject.org/getinvolved/tshirt.html">Tor T-shirt</a>.</p>
+
+<h4>Tell us about your experiences in free software development environments.</h4>
+
+<p>All of my above mentioned programs/applications are available on github. But I haven't had much experience with collaborative development, apart from the regular projects which I do with a group of friends as per my college curriculum.</p>
+
+<h4>Will you be working full-time on the project for the summer, or will you have other commitments too (a second job, classes, etc)?</h4>
+
+<p>I will be working full-time on the project. My college starts around July, after which I will be attending college for 3 to 4 hours. I intend to work late into the evening to make up for the lost time. Since, I've got my designs already approved, I can start hacking on the code right away.</p>
+
+<h4>Will your project need more work and/or maintenance after the summer ends? What are the chances you will stick around and help out with that and other related projects?</h4>
+
+<p>Yes, as development on the android platform is on a rapid pace, Orbot would need to be updated to keep up with every iteration of android. I plan to stick around and help with further development of Orbot and ORLib. Also more work needs to be done on ProxyMob, which unfortunately, I couldn't fit in my timeline. After GSoC, I intend on helping out with the TorButton port to Firefox 4 on Android.</p>
+
+<h4>What is your ideal approach to keeping everybody informed of your progress, problems, and questions over the course of the project? Said another way, how much of a "manager" will you need your mentor to be?</h4>
+
+<p>I will be available on IRC, IM, and via e-mail. I plan to stay in close touch with my mentor and others at Tor. I intend to check-in with my mentor once every week and report my progress. I plan on making use of version control software, so that my mentor can view my progress at any time.</p>
+
+<p>I also intend to blog about my progress on GSoC.</p>
+
+<h4>What school are you attending? What year are you, and what's your major/degree/focus? If you're part of a research group, which one?</h4>
+
+<p>I'm a second year computer science undergrad at Anna University, India. My current project is to provide a two-key hashing algorithm for storing music files based on their characteristics(such as melody) rather than meta-data which is often error prone.</p>
+
+<h4>How can we contact you to ask you further questions?</h4>
+
+<p>I'm usually idling on IRC. My nick is <em>gsathya</em> on freenode &amp; OFTC. Also my email-id is <em>gsathya.ceg@gmail.com</em> .</p>
+
+<h4>Is there anything else we should know that will make us like your project more?</h4>
+
+<p>I'm terrified of the dark !</p>
+</body>
+</html>
