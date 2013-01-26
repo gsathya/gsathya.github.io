@@ -17,7 +17,7 @@ Google Summer of Code, Student Contractor, Google - [May 2011, August 2011]
 
 Worked on Orbot, the Android port of Tor, to develop a new UI/UX such as a new setup 
 wizard and custom data stats; and an external library for other third-party apps to 
-route traffic through Tor. Orbot has upwards of 100,000 downloads on the Android market.
+route traffic through Tor. Orbot has upwards of 500,000 downloads on the Android market.
 
 Open Source Contributions
 -------------------------------------
@@ -32,32 +32,33 @@ which is a web service that provides an API for third party applications to lear
 about the Tor network.
 
 Previously, I worked on implementing features and fixing bugs in -
-* Orbot[2] - Android port of Tor.
-* Stem[3] - Stem is a library that provides Python bindings and utilities for using the 
+* Stem[2] - Stem is a library that provides Python bindings and utilities for using the 
 Tor control port.
 
 Projects
 ========
 
 Slyer
-A static HTML site generator written in Python. It currently powers my devlog[4].
+A static HTML site generator written in Python. It currently powers my devlog[3].
 
-github-in-a-terminal[5]
+github-in-a-terminal
 A web app that emulates Github in the form of a command line interface, written using jQuery.
 
 TrainTrack
 Android app that lists the train schedules for the Chennai Mass Rapid Transit System.
 
-College
--------
-Content based Ad-Classifier
-Ad-Classifier that uses SVM Multiclass algorithm to classify ads based on content. 
+Cipollini
+A Graphical User Interface Tor controller written in Python using Qt.
+
+
+Timezone
+A social Facebook app to share your timezone, written using Flask and hosted on Heroku.
 
 Technical Skills
 ================
 Languages - Python, C/C++, Java, Ruby, JavaScript
 Dev Environment - Unix, Git, Emacs, tmux
-
+Frameworks - Backbone.js, Flask, Twisted, Cyclone, Rails
 
 Education
 =========
@@ -67,7 +68,5 @@ Pursuing a Bachelor of Engineering degree in Computer Science - CGPA 8.42/10.00
 
 [0]: https://compass.torproject.org
 [1]: https://onionoo.torproject.org
-[2]: https://gitweb.torproject.org/user/gsathya/orbot.git 
-[3]: https://gitweb.torproject.org/user/gsathya/stem.git 
-[4]: http://devlog.gsathya.in
-[5]: https://gsathya.github.com
+[2]: https://gitweb.torproject.org/user/gsathya/stem.git 
+[3]: http://devlog.gsathya.in
