@@ -1,72 +1,75 @@
 Sathyanarayanan Gunasekaran
 
-Email: gsathya@torproject.org
+Email : gsathya@gatech.edu
 Github: www.github.com/gsathya
-
+Blog  : www.gsathya.in/blog/
 
 Work Experience
 ===============
+Georgia Tech, Graduate Research Assistant - [August 2013, Present]
+
+Building a platform to measure network performance by detecting
+filtering and blocking at various levels in the internet.
 
 Amazon, Software Development Engineer Intern - [May 2012, July 2012]
 
-Researched and implemented various optimizing methods to reduce load time and improve 
-the performance of Kindle Cloud Reader by more than 50%.
+Researched and implemented various optimizing methods to reduce load
+time and improve the performance of Kindle Cloud Reader by more than
+50%.
 
 
 Google Summer of Code, Student Contractor, Google - [May 2011, August 2011]
 
-Worked on Orbot, the Android port of Tor, to develop a new UI/UX such as a new setup 
-wizard and custom data stats; and an external library for other third-party apps to 
-route traffic through Tor. Orbot has upwards of 500,000 downloads on the Android market.
+Worked on Orbot, the Android port of Tor, to develop a new UI/UX such
+as a new setup wizard and custom data stats; and an external library
+for other third-party apps to route traffic through Tor. Orbot has
+upwards of 500,000 downloads on the Android market.
 
 Open Source Contributions
 -------------------------------------
 
 Tor Project, Developer - [Feb 2011, Present]
 
-I currently write tools to gather metrics on various features about the Tor 
-network. One such tool is Compass[0], written in Python, provides various filtering, 
-searching and grouping capabilities on various information about the Tor network
-and it's relays. Another tool I'm currently working on is Pyonionoo[1]
-which is a web service that provides an API for third party applications to learn more 
-about the Tor network.
+I currently write tools to gather metrics on various features about
+the Tor network. One such tool is Compass[0], written in Python,
+provides various information about the Tor network and it's relays.
 
 Previously, I worked on implementing features and fixing bugs in -
-* Stem[2] - Stem is a library that provides Python bindings and utilities for using the 
-Tor control port.
+
+* Stem[1] - Stem is a library that provides Python bindings and
+utilities for using the Tor control port.
 
 Projects
 ========
 
 Slyer
-A static HTML site generator written in Python. It currently powers my devlog[3].
+A static HTML site generator written in Python. It currently powers my
+devlog[2].
 
-github-in-a-terminal
-A web app that emulates Github in the form of a command line interface, written using jQuery.
+github-in-a-terminal[3]
+A web app that emulates Github in the form of a command line
+interface, written using jQuery.
 
 TrainTrack
-Android app that lists the train schedules for the Chennai Mass Rapid Transit System.
-
-Cipollini
-A Graphical User Interface Tor controller written in Python using Qt.
-
-
-Timezone
-A social Facebook app to share your timezone, written using Flask and hosted on Heroku.
+Android app that lists the train schedules for the Chennai Mass Rapid
+Transit System.
 
 Technical Skills
 ================
-Languages - Python, C/C++, Java, Ruby, JavaScript
+Languages - Python, C, Lua, JavaScript, Java
 Dev Environment - Unix, Git, Emacs, tmux
 Frameworks - Backbone.js, Flask, Twisted, Cyclone, Rails
 
 Education
 =========
 
+MS, Georgia Institute of Technology, Atlanta, Georgia, USA - [Aug 2013, May 2014]
+Pursuing a Master of Science degree in Computer Science
+
 BE, College of Engineering, Guindy, Anna University, India - [Aug 2009, May 2013]
-Pursuing a Bachelor of Engineering degree in Computer Science - CGPA 8.42/10.00
+Bachelor of Engineering degree in Computer Science - CGPA 8.42/10.00
 
 [0]: https://compass.torproject.org
-[1]: https://onionoo.torproject.org
-[2]: https://gitweb.torproject.org/user/gsathya/stem.git 
-[3]: http://devlog.gsathya.in
+[1]: https://stem.torproject.org
+[2]: http://devlog.gsathya.in
+[3]: http://www.gsathya.in/terminal.html
