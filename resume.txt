@@ -7,10 +7,15 @@ Blog  : www.gsathya.in/blog/
 Work Experience
 ===============
 
+- Mozilla, Web Developent Engineer Intern - [May 2014, Present]
+
+  Working on cross compiling SDL2(a gamedev library) to Javascript
+  using Emscripten(a c++ to javascript cross compiler).
+  
 - Georgia Tech, Graduate Research Assistant - [August 2013, Present]
 
   Building a platform to measure network performance by detecting
-  filtering and blocking at various levels in the internet.
+  filtering and blocking at various levels of the network stack.
 
 - Amazon, Software Development Engineer Intern - [May 2012, July 2012]
 
@@ -24,7 +29,7 @@ Work Experience
   Worked on Orbot, the Android port of Tor, to develop a new UI/UX such
   as a new setup wizard and custom data stats; and an external library
   for other third-party apps to route traffic through Tor. Orbot has
-  upwards of 500,000 downloads on the Android market.
+  upwards of 500,000 downloads on the Android Play Store.
 
 Open Source Contributions
 -------------------------------------
