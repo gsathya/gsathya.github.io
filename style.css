@@ -3,7 +3,7 @@ a          { color: #004B6B; }
 a:hover    { color: #6D4100; }
 .box       { width: 940px; margin: 40px auto; }
 h2, h3     { font-family: 'Garamond', 'Georgia', serif; font-weight: normal; }
-h1         { margin: 0 0 30px 0; }
+h1         { margin: 0 0 0 0; }
 h2         { font-size: 28px; margin: 15px 0 5px 0; }
 h3         { font-size: 22px; margin: 15px 0 5px 0; }
 textarea, code,
@@ -16,7 +16,7 @@ ul         { margin: 15px 0 15px 0; padding: 0; list-style: none; line-height: 1
 ul li:before { content: "\00BB \0020"; color: #888; position: absolute; margin-left: -19px; }
 blockquote { margin: 0; font-style: italic; color: #444; }
 .footer    { font-size: 13px; color: #888; text-align: right; margin-top: 25px; }
-.nav       { text-align: center; }
+.nav       { text-align: left; }
 .nav a     { font-style: italic; }
 .backnav   { float: right; color: #444; font-style: italic;
              margin: 5px 0 0 0; font-size: 0.9em; }
