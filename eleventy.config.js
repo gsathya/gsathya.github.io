@@ -10,12 +10,12 @@ const { EleventyHtmlBasePlugin } = require("@11ty/eleventy");
 const pluginDrafts = require("./eleventy.config.drafts.js");
 const pluginImages = require("./eleventy.config.images.js");
 
-module.exports = function(eleventyConfig) {
+module.exports = function (eleventyConfig) {
 	// Copy the contents of the `public` folder to the output folder
 	// For example, `./public/css/` ends up in `_site/css/`
 	eleventyConfig.addPassthroughCopy({
 		"./public/": "/",
-		"./node_modules/prismjs/themes/prism-okaidia.css": "/css/prism-okaidia.css"
+		"./node_modules/prismjs/themes/prism-okaidia.css": "/css/prism-okaidia.css",
 	});
 
 	// Run Eleventy when these files change:
@@ -31,7 +31,7 @@ module.exports = function(eleventyConfig) {
 	// Official plugins
 	eleventyConfig.addPlugin(pluginRss);
 	eleventyConfig.addPlugin(pluginSyntaxHighlight, {
-		preAttributes: { tabindex: 0 }
+		preAttributes: { tabindex: 0 },
 	});
 	eleventyConfig.addPlugin(pluginNavigation);
 	eleventyConfig.addPlugin(EleventyHtmlBasePlugin);
@@ -40,20 +40,22 @@ module.exports = function(eleventyConfig) {
 	// Filters
 	eleventyConfig.addFilter("readableDate", (dateObj, format, zone) => {
 		// Formatting tokens for Luxon: https://moment.github.io/luxon/#/formatting?id=table-of-tokens
-		return DateTime.fromJSDate(dateObj, { zone: zone || "utc" }).toFormat(format || "dd LLLL yyyy");
+		return DateTime.fromJSDate(dateObj, { zone: zone || "utc" }).toFormat(
+			format || "dd LLLL yyyy"
+		);
 	});
 
-	eleventyConfig.addFilter('htmlDateString', (dateObj) => {
+	eleventyConfig.addFilter("htmlDateString", (dateObj) => {
 		// dateObj input: https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-date-string
-		return DateTime.fromJSDate(dateObj, {zone: 'utc'}).toFormat('yyyy-LL-dd');
+		return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
 	});
 
 	// Get the first `n` elements of a collection.
 	eleventyConfig.addFilter("head", (array, n) => {
-		if(!Array.isArray(array) || array.length === 0) {
+		if (!Array.isArray(array) || array.length === 0) {
 			return [];
 		}
-		if( n < 0 ) {
+		if (n < 0) {
 			return array.slice(n);
 		}
 
@@ -66,20 +68,22 @@ module.exports = function(eleventyConfig) {
 	});
 
 	// Return all the tags used in a collection
-	eleventyConfig.addFilter("getAllTags", collection => {
+	eleventyConfig.addFilter("getAllTags", (collection) => {
 		let tagSet = new Set();
-		for(let item of collection) {
-			(item.data.tags || []).forEach(tag => tagSet.add(tag));
+		for (let item of collection) {
+			(item.data.tags || []).forEach((tag) => tagSet.add(tag));
 		}
 		return Array.from(tagSet);
 	});
 
 	eleventyConfig.addFilter("filterTagList", function filterTagList(tags) {
-		return (tags || []).filter(tag => ["all", "nav", "post", "posts"].indexOf(tag) === -1);
+		return (tags || []).filter(
+			(tag) => ["all", "nav", "post", "posts"].indexOf(tag) === -1
+		);
 	});
 
 	// Customize Markdown library settings:
-	eleventyConfig.amendLibrary("md", mdLib => {
+	eleventyConfig.amendLibrary("md", (mdLib) => {
 		mdLib.use(markdownItAnchor, {
 			permalink: markdownItAnchor.permalink.ariaHidden({
 				placement: "after",
@@ -87,8 +91,8 @@ module.exports = function(eleventyConfig) {
 				symbol: "#",
 				ariaHidden: false,
 			}),
-			level: [1,2,3,4],
-			slugify: eleventyConfig.getFilter("slugify")
+			level: [1, 2, 3, 4],
+			slugify: eleventyConfig.getFilter("slugify"),
 		});
 	});
 
@@ -103,12 +107,7 @@ module.exports = function(eleventyConfig) {
 	return {
 		// Control which files Eleventy will process
 		// e.g.: *.md, *.njk, *.html, *.liquid
-		templateFormats: [
-			"md",
-			"njk",
-			"html",
-			"liquid",
-		],
+		templateFormats: ["md", "njk", "html", "liquid"],
 
 		// Pre-process *.md files with: (default: `liquid`)
 		markdownTemplateEngine: "njk",
@@ -118,10 +117,10 @@ module.exports = function(eleventyConfig) {
 
 		// These are all optional:
 		dir: {
-			input: "content",          // default: "."
-			includes: "../_includes",  // default: "_includes"
-			data: "../_data",          // default: "_data"
-			output: "_site"
+			input: "content", // default: "."
+			includes: "../_includes", // default: "_includes"
+			data: "../_data", // default: "_data"
+			output: "docs",
 		},
 
 		// -----------------------------------------------------------------
