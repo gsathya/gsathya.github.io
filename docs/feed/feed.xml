@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="en">
+	<title>Recompiled</title>
+	<subtitle>I write about compilers and JavaScript</subtitle>
+	<link href="https://www.recompiled.dev/feed/feed.xml" rel="self"/>
+	<link href="https://www.recompiled.dev/"/>
+	<updated>2023-07-28T14:37:01Z</updated>
+	<id>https://www.recompiled.dev</id>
+	<author>
+		<name>Sathya Gunasekran</name>
+		<email>gsathya.ceg@gmail.com</email>
+	</author>
+</feed>
