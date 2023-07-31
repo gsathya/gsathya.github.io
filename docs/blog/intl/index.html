@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Internationalization APIs in V8</title>
+		<meta name="description" content="The JavaScript Internationalization API is growing, and its V8 implementation is getting faster!">
+		<link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Recompiled">
+		<link rel="alternate" href="/feed/feed.json" type="application/json" title="Recompiled">
+		<meta name="generator" content="Eleventy v2.0.1">
+		
+		<style>/* Message Box */
+.message-box {
+	--color-message-box: #ffc;
+
+	display: block;
+	background-color: var(--color-message-box);
+	color: var(--color-gray-90);
+	padding: 1em 0.625em; /* 16px 10px /16 */
+	margin: 0.5em;
+}
+
+@media (prefers-color-scheme: dark) {
+	.message-box {
+		--color-message-box: #021e36;
+	}
+}
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}
+* { box-sizing: border-box; }
+/* Defaults */
+:root {
+	--font-family: -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono,
+		Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono,
+		Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New,
+		Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #c0c0c0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #082840;
+	--text-color-link-active: #5f2b48;
+	--text-color-link-visited: #17050f;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #c0c0c0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #6969f7;
+		--text-color-link-visited: #a6a6f8;
+
+		--darkblue: #011627;
+		--image-filter: grayscale(50%);
+	}
+}
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+}
+html,
+body {
+	background-color: var(--darkblue);
+	max-width: 50em;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main {
+	padding: 1rem;
+}
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+header:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.links-nextprev {
+	list-style: none;
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+
+table {
+	margin: 1em 0;
+}
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+pre:not([class*="language-"]) {
+	margin: 0.5em 0;
+	line-height: 1.375; /* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+}
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em 0.5em;
+	flex-wrap: wrap;
+	align-items: center;
+	padding: 1em;
+}
+.home-link {
+	font-size: 1em; /* 16px /16 */
+	font-weight: 700;
+	margin-right: 2em;
+}
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.nav-item {
+	display: inline-block;
+	margin-right: 1em;
+}
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+
+/* Posts list */
+.postlist {
+	list-style: none;
+	padding: 0;
+}
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+.postlist-date {
+	font-size: 0.8125em; /* 13px /16 */
+	color: var(--color-gray-90);
+}
+.postlist-date {
+	word-spacing: -0.5px;
+}
+.postlist-link {
+	font-size: 1.1875em; /* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+.postlist-item > .post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.post-metadata time {
+	margin-right: 1em;
+}
+
+/* Direct Links / Markdown Headers */
+.header-anchor {
+	text-decoration: none;
+	font-style: normal;
+	font-size: 1em;
+	margin-left: 0.1em;
+}
+a[href].header-anchor,
+a[href].header-anchor:visited {
+	color: transparent;
+}
+a[href].header-anchor:focus,
+a[href].header-anchor:hover {
+	text-decoration: underline;
+}
+a[href].header-anchor:focus,
+:hover > a[href].header-anchor {
+	color: #aaa;
+}
+
+img,
+svg {
+	display: block;
+	margin: 0 auto;
+	max-width: 100%;
+	height: auto;
+	@media (prefers-color-scheme: dark) {
+		filter: invert(0.862745) hue-rotate(180deg);
+	}
+}
+h2 + .header-anchor {
+	font-size: 1.5em;
+}
+
+span#name:after {
+	content: "Sathya Gunasekaran";
+}
+span#name:hover:after {
+	content: "சத்யா குணசேகரன்";
+}
+
+#title-text {
+	min-height: 2em;
+}</style>
+	</head>
+	<body>
+		<a href="#skip" class="visually-hidden">Skip to main content</a>
+
+		<header>
+			<a href="/" class="home-link">Recompiled</a>
+			<nav>
+				<h2 class="visually-hidden">Top level navigation menu</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/">Home</a></li>
+					<li class="nav-item"><a href="/about/">About Me</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="skip">
+			
+<h1>Internationalization APIs in V8</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2019-04-25">25 April 2019</time></li>
+	<li><a href="/tags/ecmascript/" class="post-tag">ECMAScript</a>, </li>
+	<li><a href="/tags/intl/" class="post-tag">Intl</a></li>
+</ul>
+
+<div class="message-box">
+	<p><em>This post was originally published on the <a href="https://v8.dev/blog/intl">V8 blog</a>.</em></p>
+</div>
+<p><a href="https://tc39.es/ecma402/">The ECMAScript Internationalization API Specification</a> (ECMA-402, or <code>Intl</code>) provides key locale-specific functionality such as date formatting, number formatting, plural form selection, and collation. The Chrome V8 and Google Internationalization teams have been collaborating on adding features to V8’s ECMA-402 implementation, while cleaning up technical debt and improving performance and interoperability with other browsers.</p>
+<h2 id="underlying-architectural-improvements" tabindex="-1">Underlying architectural improvements <a class="header-anchor" href="#underlying-architectural-improvements">#</a></h2>
+<p>Initially the ECMA-402 spec was implemented mostly in JavaScript using V8-extensions and lived outside the V8 codebase. Using the external Extension API meant that several of V8’s internally used APIs for type checking, lifetime management of external C++ objects and internal private data storage couldn’t be used. As part of improving startup performance, this implementation was later moved in to the V8 codebase to enable <a href="/blog/custom-startup-snapshots">snapshotting</a> of these builtins.</p>
+<p>V8 uses specialized <code>JSObject</code>s with custom <a href="https://mathiasbynens.be/notes/shapes-ics">shapes (hidden classes)</a> to describe built-in JavaScript objects specified by ECMAScript (like <code>Promise</code>s, <code>Map</code>s, <code>Set</code>s, etc). With this approach, V8 can pre-allocate the required number of internal slots and generate fast accesses to these, rather than grow the object one property at a time leading to slower performance and worse memory usage.</p>
+<p>The <code>Intl</code> implementation was not modeled after such an architecture, as a consequence of the historic split. Instead, all the built-in JavaScript objects as specified by the Internationalization spec (like <code>NumberFormat</code>, <code>DateTimeFormat</code>) were generic <code>JSObject</code>s that had to transition through several property additions for their internal slots.</p>
+<p>Another artifact of not having a specialized <code>JSObject</code>s was that type checking was now more complex. The type information was stored under a private symbol and type-checked on both the JS and C++ side using expensive property access, rather than just looking up its shape.</p>
+<h3 id="modernizing-the-codebase" tabindex="-1">Modernizing the codebase <a class="header-anchor" href="#modernizing-the-codebase">#</a></h3>
+<p>With the current move away from writing self-hosted builtins in V8, it made sense to use this opportunity to modernize the ECMA402 implementation.</p>
+<h3 id="moving-away-from-self-hosted-js" tabindex="-1">Moving away from self-hosted JS <a class="header-anchor" href="#moving-away-from-self-hosted-js">#</a></h3>
+<p>Although self-hosting lends itself to concise and readable code, the frequent usage of slow runtime calls to access ICU APIs led to performance issues. As a result, a lot of ICU functionality was duplicated in JavaScript to reduce the number of such runtime calls.</p>
+<p>By rewriting the builtins in C++, it became much faster to access the ICU APIs as there is no runtime call overhead now.</p>
+<h3 id="improving-icu" tabindex="-1">Improving ICU <a class="header-anchor" href="#improving-icu">#</a></h3>
+<p>ICU is a set of C/C++ libraries used by a large set of applications, including all the major JavaScript engines, for providing Unicode and globalization support. As part of switching <code>Intl</code> to ICU in V8’s implementation, we <a href="https://unicode-org.atlassian.net/browse/ICU-20140">found</a> <a href="https://unicode-org.atlassian.net/browse/ICU-9562">and</a> <a href="https://unicode-org.atlassian.net/browse/ICU-20098">fixed</a> several ICU bugs.</p>
+<p>As part of implementing new proposals such as <a href="/features/intl-relativetimeformat"><code>Intl.RelativeTimeFormat</code></a>, <a href="/features/intl-listformat"><code>Intl.ListFormat</code></a> and <code>Intl.Locale</code>, we’ve extended ICU by adding <a href="https://unicode-org.atlassian.net/browse/ICU-13256">several</a> <a href="https://unicode-org.atlassian.net/browse/ICU-20121">new</a> <a href="https://unicode-org.atlassian.net/browse/ICU-20342">APIs</a> to support these new ECMAScript proposals.</p>
+<p>All of these additions help other JavaScript engines implement these proposals quicker now, pushing the web forward! For example, development is in progress in Firefox on implementing several new <code>Intl</code> APIs based on our ICU work.</p>
+<h2 id="performance" tabindex="-1">Performance <a class="header-anchor" href="#performance">#</a></h2>
+<p>As a result of this work, we improved the performance of the Internationalization API by optimizing several fast paths and caching the initialization of the various <code>Intl</code> objects and the <code>toLocaleString</code> methods on <code>Number.prototype</code>, <code>Date.prototype</code>, and <code>String.prototype</code>.</p>
+<p>For example, creating a new <code>Intl.NumberFormat</code> object became around 24× faster.</p>
+<p><picture><source type="image/avif" srcset="/img/1oz8K5m7ve-713.avif 713w"><source type="image/webp" srcset="/img/1oz8K5m7ve-713.webp 713w"><img alt="Microbenchmarks testing the performance of creating various `Intl` objects" loading="lazy" decoding="async" src="/img/1oz8K5m7ve-713.svg" width="713" height="371"></picture></p>
+<p>Note that for better performance, it’s recommended to explicitly create <em>and reuse</em> an <code>Intl.NumberFormat</code> or <code>Intl.DateTimeFormat</code> or <code>Intl.Collator</code> object, rather than calling methods like <code>toLocaleString</code> or <code>localeCompare</code>.</p>
+<h2 id="new-intl-features" tabindex="-1">New <code>Intl</code> features <a class="header-anchor" href="#new-intl-features">#</a></h2>
+<p>All of this work has provided a great foundation to build new features on and we’re continuing to ship all the new Internationalization proposals that are in Stage 3.</p>
+<p><a href="/features/intl-relativetimeformat"><code>Intl.RelativeTimeFormat</code></a> has shipped in Chrome 71, <a href="/features/intl-listformat"><code>Intl.ListFormat</code></a> has shipped in Chrome 72, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Locale"><code>Intl.Locale</code></a> has shipped in Chrome 74, and <a href="https://github.com/tc39/proposal-intl-datetime-style"><code>dateStyle</code> and <code>timeStyle</code> options for <code>Intl.DateTimeFormat</code></a> and <a href="https://github.com/tc39/ecma402/pull/236">BigInt support for <code>Intl.DateTimeFormat</code></a> are shipping in Chrome 76. <a href="https://github.com/tc39/proposal-intl-DateTimeFormat-formatRange"><code>Intl.DateTimeFormat#formatRange</code></a>, <a href="https://github.com/tc39/proposal-intl-segmenter/"><code>Intl.Segmenter</code></a>, and <a href="https://github.com/tc39/proposal-unified-intl-numberformat/">additional options for <code>Intl.NumberFormat</code></a> are currently under development in V8, and we hope to ship them soon!</p>
+<p>Many of these new APIs, and others further down the pipeline, are due to our work on standardizing new features to help developers with internationalization. <a href="https://github.com/tc39/proposal-intl-displaynames"><code>Intl.DisplayNames</code></a> is a Stage 1 proposal that allows users to localize the display names of language, region or script display names. <a href="https://github.com/fabalbon/proposal-intl-DateTimeFormat-formatRange"><code>Intl.DateTimeFormat#formatRange</code></a> is a Stage 3 proposal that specifies a way to format date ranges in a concise and locale-aware manner. <a href="https://github.com/tc39/proposal-unified-intl-numberformat">The unified <code>Intl.NumberFormat</code> API proposal</a> is a Stage 3 proposal that improves <code>Intl.NumberFormat</code> by adding support for measurement units, currency and sign display policies, and scientific and compact notation. You can get involved in the future of ECMA-402 as well, by contributing at <a href="https://github.com/tc39/ecma402">its GitHub repository</a>.</p>
+<h2 id="conclusion" tabindex="-1">Conclusion <a class="header-anchor" href="#conclusion">#</a></h2>
+<p><code>Intl</code> provides a feature-rich API for several operations needed in internationalizing your web app, leaving the heavy lifting to the browser, without shipping as much data or code over the wire. Thinking through the proper use of these APIs can lead your UI to work better in different locales. Due to the work by the Google V8 and i18n teams in collaboration with TC39 and its ECMA-402 subgroup, you can now access more functionality with better performance, and expect further improvements over time.</p>
+
+<ul class="links-nextprev"><li>Previous: <a href="/blog/hash-code/">Optimizing hash tables in V8</a></li>
+</ul>
+
+		</main>
+
+		<footer></footer>
+
+		<!-- Current page: /blog/intl/ -->
+	</body>
+</html>

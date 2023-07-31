@@ -9,7 +9,7 @@
 		<link rel="alternate" href="/feed/feed.json" type="application/json" title="Recompiled">
 		<meta name="generator" content="Eleventy v2.0.1">
 		
-		<style>.postlist { counter-reset: start-from 2 }
+		<style>.postlist { counter-reset: start-from 3 }
 /* Message Box */
 .message-box {
 	--color-message-box: #ffc;
@@ -211,7 +211,6 @@ header {
 .postlist {
 	list-style: none;
 	padding: 0;
-	padding-left: 1.5rem;
 }
 .postlist-item {
 	display: flex;
@@ -220,16 +219,7 @@ header {
 	counter-increment: start-from -1;
 	margin-bottom: 1em;
 }
-.postlist-item:before {
-	display: inline-block;
-	pointer-events: none;
-	content: "" counter(start-from, decimal-leading-zero) ". ";
-	line-height: 100%;
-	text-align: right;
-	margin-left: -1.5rem;
-}
-.postlist-date,
-.postlist-item:before {
+.postlist-date {
 	font-size: 0.8125em; /* 13px /16 */
 	color: var(--color-gray-90);
 }
@@ -240,8 +230,6 @@ header {
 	font-size: 1.1875em; /* 19px /16 */
 	font-weight: 700;
 	flex-basis: calc(100% - 1.5rem);
-	padding-left: 0.25em;
-	padding-right: 0.5em;
 	text-underline-position: from-font;
 	text-underline-offset: 0;
 	text-decoration-thickness: 1px;
@@ -307,6 +295,17 @@ svg {
 }
 h2 + .header-anchor {
 	font-size: 1.5em;
+}
+
+span#name:after {
+	content: "Sathya Gunasekaran";
+}
+span#name:hover:after {
+	content: "சத்யா குணசேகரன்";
+}
+
+#title-text {
+	min-height: 2em;
 }</style>
 	</head>
 	<body>
@@ -331,14 +330,19 @@ h2 + .header-anchor {
 
 
 
-<ol reversed class="postlist">
+<ul reversed class="postlist">
+
+	<li class="postlist-item">
+		<a href="/blog/intl/" class="postlist-link">Internationalization APIs in V8</a>
+		<time class="postlist-date" datetime="2019-04-25">April 2019</time>
+	</li>
 
 	<li class="postlist-item">
 		<a href="/blog/hash-code/" class="postlist-link">Optimizing hash tables in V8</a>
 		<time class="postlist-date" datetime="2018-01-29">January 2018</time>
 	</li>
 
-</ol>
+</ul>
 
 
 

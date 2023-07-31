@@ -378,7 +378,6 @@ header {
 .postlist {
 	list-style: none;
 	padding: 0;
-	padding-left: 1.5rem;
 }
 .postlist-item {
 	display: flex;
@@ -387,16 +386,7 @@ header {
 	counter-increment: start-from -1;
 	margin-bottom: 1em;
 }
-.postlist-item:before {
-	display: inline-block;
-	pointer-events: none;
-	content: "" counter(start-from, decimal-leading-zero) ". ";
-	line-height: 100%;
-	text-align: right;
-	margin-left: -1.5rem;
-}
-.postlist-date,
-.postlist-item:before {
+.postlist-date {
 	font-size: 0.8125em; /* 13px /16 */
 	color: var(--color-gray-90);
 }
@@ -407,8 +397,6 @@ header {
 	font-size: 1.1875em; /* 19px /16 */
 	font-weight: 700;
 	flex-basis: calc(100% - 1.5rem);
-	padding-left: 0.25em;
-	padding-right: 0.5em;
 	text-underline-position: from-font;
 	text-underline-offset: 0;
 	text-decoration-thickness: 1px;
@@ -474,6 +462,17 @@ svg {
 }
 h2 + .header-anchor {
 	font-size: 1.5em;
+}
+
+span#name:after {
+	content: "Sathya Gunasekaran";
+}
+span#name:hover:after {
+	content: "சத்யா குணசேகரன்";
+}
+
+#title-text {
+	min-height: 2em;
 }</style>
 	</head>
 	<body>
@@ -556,6 +555,8 @@ x<span class="token punctuation">[</span><span class="token string">"foo"</span>
 <p>This also resulted in an 18% improvement in one of the benchmarks in the <a href="http://emberperf.eviltrout.com/">Emberperf</a> benchmark suite that tests Ember.js.</p>
 <p><picture><source type="image/avif" srcset="/img/KpLBt1XS4c-1987.avif 1987w"><source type="image/webp" srcset="/img/KpLBt1XS4c-1987.webp 1987w"><img alt="a graph" loading="lazy" decoding="async" src="/img/KpLBt1XS4c-1987.jpeg" width="1987" height="609"></picture></p>
 
+<ul class="links-nextprev"><li>Next: <a href="/blog/intl/">Internationalization APIs in V8</a></li>
+</ul>
 
 		</main>
 
