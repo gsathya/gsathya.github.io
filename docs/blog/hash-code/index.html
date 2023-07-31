@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Optimizing hash tables in V8</title>
+		<meta name="description" content="Several JavaScript data structures such as Map, Set, WeakSet, and WeakMap use hash tables under the hood. This article explains how V8 v6.3 improves hash table performance.">
+		<link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Recompiled">
+		<link rel="alternate" href="/feed/feed.json" type="application/json" title="Recompiled">
+		<meta name="generator" content="Eleventy v2.0.1">
+		
+		<style>/* Message Box */
+.message-box {
+	--color-message-box: #ffc;
+
+	display: block;
+	background-color: var(--color-message-box);
+	color: var(--color-gray-90);
+	padding: 1em 0.625em; /* 16px 10px /16 */
+	margin: 0.5em;
+}
+
+@media (prefers-color-scheme: dark) {
+	.message-box {
+		--color-message-box: #021e36;
+	}
+}
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}
+* { box-sizing: border-box; }
+/* Defaults */
+:root {
+	--font-family: -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono,
+		Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono,
+		Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New,
+		Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #c0c0c0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #082840;
+	--text-color-link-active: #5f2b48;
+	--text-color-link-visited: #17050f;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #c0c0c0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #6969f7;
+		--text-color-link-visited: #a6a6f8;
+
+		--darkblue: #011627;
+		--image-filter: grayscale(50%);
+	}
+}
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+}
+html,
+body {
+	background-color: var(--darkblue);
+	max-width: 50em;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main {
+	padding: 1rem;
+}
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+header:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.links-nextprev {
+	list-style: none;
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+
+table {
+	margin: 1em 0;
+}
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+pre:not([class*="language-"]) {
+	margin: 0.5em 0;
+	line-height: 1.375; /* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+}
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em 0.5em;
+	flex-wrap: wrap;
+	align-items: center;
+	padding: 1em;
+}
+.home-link {
+	font-size: 1em; /* 16px /16 */
+	font-weight: 700;
+	margin-right: 2em;
+}
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.nav-item {
+	display: inline-block;
+	margin-right: 1em;
+}
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+
+/* Posts list */
+.postlist {
+	list-style: none;
+	padding: 0;
+	padding-left: 1.5rem;
+}
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+.postlist-item:before {
+	display: inline-block;
+	pointer-events: none;
+	content: "" counter(start-from, decimal-leading-zero) ". ";
+	line-height: 100%;
+	text-align: right;
+	margin-left: -1.5rem;
+}
+.postlist-date,
+.postlist-item:before {
+	font-size: 0.8125em; /* 13px /16 */
+	color: var(--color-gray-90);
+}
+.postlist-date {
+	word-spacing: -0.5px;
+}
+.postlist-link {
+	font-size: 1.1875em; /* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	padding-left: 0.25em;
+	padding-right: 0.5em;
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+.postlist-item > .post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.post-metadata time {
+	margin-right: 1em;
+}
+
+/* Direct Links / Markdown Headers */
+.header-anchor {
+	text-decoration: none;
+	font-style: normal;
+	font-size: 1em;
+	margin-left: 0.1em;
+}
+a[href].header-anchor,
+a[href].header-anchor:visited {
+	color: transparent;
+}
+a[href].header-anchor:focus,
+a[href].header-anchor:hover {
+	text-decoration: underline;
+}
+a[href].header-anchor:focus,
+:hover > a[href].header-anchor {
+	color: #aaa;
+}
+
+img,
+svg {
+	display: block;
+	margin: 0 auto;
+	max-width: 100%;
+	height: auto;
+	@media (prefers-color-scheme: dark) {
+		filter: invert(0.862745) hue-rotate(180deg);
+	}
+}
+h2 + .header-anchor {
+	font-size: 1.5em;
+}</style>
+	</head>
+	<body>
+		<a href="#skip" class="visually-hidden">Skip to main content</a>
+
+		<header>
+			<a href="/" class="home-link">Recompiled</a>
+			<nav>
+				<h2 class="visually-hidden">Top level navigation menu</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/">Home</a></li>
+					<li class="nav-item"><a href="/about/">About Me</a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="skip">
+			
+<h1>Optimizing hash tables in V8</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2018-01-29">29 January 2018</time></li>
+	<li><a href="/tags/v8/" class="post-tag">v8</a></li>
+</ul>
+
+<div class="message-box">
+	<p><em>This post was originally published on the <a href="https://v8.dev/blog/hash-code">V8 blog</a>.</em></p>
+</div>
+<p>ECMAScript 2015 introduced several new data structures such as Map, Set, WeakSet, and WeakMap, all of which use hash tables under the hood. This post details the <a href="https://bugs.chromium.org/p/v8/issues/detail?id=6404">recent improvements</a> in how <a href="/blog/v8-release-63">V8 v6.3+</a> stores the keys in hash tables.</p>
+<h2 id="hash-code" tabindex="-1">Hash code <a class="header-anchor" href="#hash-code">#</a></h2>
+<p>A <a href="https://en.wikipedia.org/wiki/Hash_function"><em>hash function</em></a> is used to map a given key to a location in the hash table. A <em>hash code</em> is the result of running this hash function over a given key.</p>
+<p>In V8, the hash code is just a random number, independent of the object value. Therefore, we can’t recompute it, meaning we must store it.</p>
+<p>For JavaScript objects that were used as keys, previously, the hash code was stored as a private symbol on the object. A private symbol in V8 is similar to a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol"><code>Symbol</code></a>, except that it’s not enumerable and doesn’t leak to userspace JavaScript.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">GetObjectHash</span><span class="token punctuation">(</span><span class="token parameter">key</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">let</span> hash <span class="token operator">=</span> key<span class="token punctuation">[</span>hashCodeSymbol<span class="token punctuation">]</span><span class="token punctuation">;</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token constant">IS_UNDEFINED</span><span class="token punctuation">(</span>hash<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		hash <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">MathRandom</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">0x40000000</span><span class="token punctuation">)</span> <span class="token operator">|</span> <span class="token number">0</span><span class="token punctuation">;</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span>hash <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> hash <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+		key<span class="token punctuation">[</span>hashCodeSymbol<span class="token punctuation">]</span> <span class="token operator">=</span> hash<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">return</span> hash<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>This worked well because we didn’t have to reserve memory for a hash code field until the object was added to a hash table, at which point a new private symbol was stored on the object.</p>
+<p>V8 could also optimize the hash code symbol lookup just like any other property lookup using the IC system, providing very fast lookups for the hash code. This works well for <a href="https://en.wikipedia.org/wiki/Inline_caching#Monomorphic_inline_caching">monomorphic IC lookups</a>, when the keys have the same <a href="/">hidden class</a>. However, most real-world code doesn’t follow this pattern, and often keys have different hidden classes, leading to slow <a href="https://en.wikipedia.org/wiki/Inline_caching#Megamorphic_inline_caching">megamorphic IC lookups</a> of the hash code.</p>
+<p>Another problem with the private symbol approach was that it triggered a <a href="/#fast-property-access">hidden class transition</a> in the key on storing the hash code. This resulted in poor polymorphic code not just for the hash code lookup but also for other property lookups on the key and <a href="https://floitsch.blogspot.com/2012/03/optimizing-for-v8-inlining.html">deoptimization</a> from optimized code.</p>
+<h2 id="javascript-object-backing-stores" tabindex="-1">JavaScript object backing stores <a class="header-anchor" href="#javascript-object-backing-stores">#</a></h2>
+<p>A JavaScript object (<code>JSObject</code>) in V8 uses two words (apart from its header): one word for storing a pointer to the elements backing store, and another word for storing a pointer to the properties backing store.</p>
+<p>The elements backing store is used for storing properties that look like <a href="https://tc39.es/ecma262/#sec-array-index">array indices</a>, whereas the properties backing store is used for storing properties whose keys are strings or symbols. See this <a href="/blog/fast-properties">V8 blog post</a> by Camillo Bruni for more information about these backing stores.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> x <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+x<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"bar"</span><span class="token punctuation">;</span> <span class="token comment">// ← stored in elements</span>
+x<span class="token punctuation">[</span><span class="token string">"foo"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"bar"</span><span class="token punctuation">;</span> <span class="token comment">// ← stored in properties</span></code></pre>
+<h2 id="hiding-the-hash-code" tabindex="-1">Hiding the hash code <a class="header-anchor" href="#hiding-the-hash-code">#</a></h2>
+<p>The easiest solution to storing the hash code would be to extend the size of a JavaScript object by one word and store the hash code directly on the object. However, this would waste memory for objects that aren’t added to a hash table. Instead, we could try to store the hash code in the elements store or properties store.</p>
+<p>The elements backing store is an array containing its length and all the elements. There’s not much to be done here, as storing the hashcode in a reserved slot (like the 0th index) would still waste memory when we don’t use the object as a key in a hash table.</p>
+<p>Let’s look at the properties backing store. There are two kinds of data structures used as a properties backing store: arrays and dictionaries.</p>
+<p>Unlike the array used in the elements backing store which does not have an upper limit, the array used in the properties backing store has an upper limit of 1022 values. V8 transitions to using a dictionary on exceeding this limit for performance reasons. (I’m slightly simplifying this — V8 can also use a dictionary in other cases, but there is a fixed upper limit on the number of values that can be stored in the array.)</p>
+<p>So, there are three possible states for the properties backing store:</p>
+<ol>
+<li>empty (no properties)</li>
+<li>array (can store up to 1022 values)</li>
+<li>dictionary</li>
+</ol>
+<p>Let’s discuss each of these.</p>
+<h3 id="the-properties-backing-store-is-empty" tabindex="-1">The properties backing store is empty <a class="header-anchor" href="#the-properties-backing-store-is-empty">#</a></h3>
+<p>For the empty case, we can directly store the hash code in this offset on the <code>JSObject</code>.</p>
+<p><picture><source type="image/avif" srcset="/img/wAsJyBpUBW-323.avif 323w"><source type="image/webp" srcset="/img/wAsJyBpUBW-323.webp 323w"><img alt="a graph" loading="lazy" decoding="async" src="/img/wAsJyBpUBW-323.png" width="323" height="160"></picture></p>
+<h3 id="the-properties-backing-store-is-an-array" tabindex="-1">The properties backing store is an array <a class="header-anchor" href="#the-properties-backing-store-is-an-array">#</a></h3>
+<p>V8 represents integers less than 2<sup>31</sup> (on 32-bit systems) unboxed, as <a href="https://wingolog.org/archives/2011/05/18/value-representation-in-javascript-implementations">Smi</a>s. In a Smi, the least significant bit is a tag used to distinguish it from pointers, while the remaining 31 bits hold the actual integer value.</p>
+<p>Normally, arrays store their length as a Smi. Since we know that the maximum capacity of this array is only 1022, we only need 10 bits to store the length. We can use the remaining 21 bits to store the hash code!</p>
+<p><picture><source type="image/avif" srcset="/img/DSYtSz1nW7-491.avif 491w"><source type="image/webp" srcset="/img/DSYtSz1nW7-491.webp 491w"><img alt="a graph" loading="lazy" decoding="async" src="/img/DSYtSz1nW7-491.png" width="491" height="322"></picture></p>
+<h3 id="the-properties-backing-store-is-a-dictionary" tabindex="-1">The properties backing store is a dictionary <a class="header-anchor" href="#the-properties-backing-store-is-a-dictionary">#</a></h3>
+<p>For the dictionary case, we increase the dictionary size by 1 word to store the hashcode in a dedicated slot at the beginning of the dictionary. We get away with potentially wasting a word of memory in this case, because the proportional increase in size isn’t as big as in the array case.</p>
+<p><picture><source type="image/avif" srcset="/img/YDT1jhWCfY-446.avif 446w"><source type="image/webp" srcset="/img/YDT1jhWCfY-446.webp 446w"><img alt="a graph" loading="lazy" decoding="async" src="/img/YDT1jhWCfY-446.png" width="446" height="214"></picture></p>
+<p>With these changes, the hash code lookup no longer has to go through the complex JavaScript property lookup machinery.</p>
+<h2 id="performance-improvements" tabindex="-1">Performance improvements <a class="header-anchor" href="#performance-improvements">#</a></h2>
+<p>The <a href="https://github.com/kpdecker/six-speed">SixSpeed</a> benchmark tracks the performance of Map and Set, and these changes resulted in a ~500% improvement.</p>
+<p><picture><source type="image/avif" srcset="/img/wEfBvRvGlO-1999.avif 1999w"><source type="image/webp" srcset="/img/wEfBvRvGlO-1999.webp 1999w"><img alt="a graph" loading="lazy" decoding="async" src="/img/wEfBvRvGlO-1999.png" width="1999" height="386"></picture></p>
+<p>This change caused a 5% improvement on the Basic benchmark in <a href="https://webkit.org/blog/7536/jsc-loves-es6/">ARES6</a> as well.</p>
+<p><picture><source type="image/avif" srcset="/img/hskYCYhgJ4-1999.avif 1999w"><source type="image/webp" srcset="/img/hskYCYhgJ4-1999.webp 1999w"><img alt="a graph" loading="lazy" decoding="async" src="/img/hskYCYhgJ4-1999.png" width="1999" height="505"></picture></p>
+<p>This also resulted in an 18% improvement in one of the benchmarks in the <a href="http://emberperf.eviltrout.com/">Emberperf</a> benchmark suite that tests Ember.js.</p>
+<p><picture><source type="image/avif" srcset="/img/KpLBt1XS4c-1987.avif 1987w"><source type="image/webp" srcset="/img/KpLBt1XS4c-1987.webp 1987w"><img alt="a graph" loading="lazy" decoding="async" src="/img/KpLBt1XS4c-1987.jpeg" width="1987" height="609"></picture></p>
+
+
+		</main>
+
+		<footer></footer>
+
+		<!-- Current page: /blog/hash-code/ -->
+	</body>
+</html>

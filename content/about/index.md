@@ -7,7 +7,7 @@ eleventyNavigation:
 
 # About Me
 
-I work on [React](https://react.dev/) at Meta. Previously, I used to work on
-[V8](https://v8.dev/) at Google.
+⛳ Chennai → SF → London
 
-Chennai → SF → London ⛳
+I work on [React](https://react.dev/) at Meta. Previously, I worked on
+[V8](https://v8.dev/) at Google.

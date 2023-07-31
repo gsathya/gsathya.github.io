@@ -13,13 +13,16 @@
 /* Defaults */
 :root {
 	--font-family: -apple-system, system-ui, sans-serif;
-	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono,
+		Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono,
+		Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New,
+		Courier, monospace;
 }
 
 /* Theme colors */
 :root {
 	--color-gray-20: #e0e0e0;
-	--color-gray-50: #C0C0C0;
+	--color-gray-50: #c0c0c0;
 	--color-gray-90: #333;
 
 	--background-color: #fff;
@@ -27,7 +30,7 @@
 	--text-color: var(--color-gray-90);
 	--text-color-link: #082840;
 	--text-color-link-active: #5f2b48;
-	--text-color-link-visited: #17050F;
+	--text-color-link-visited: #17050f;
 
 	--syntax-tab-size: 2;
 }
@@ -35,7 +38,7 @@
 @media (prefers-color-scheme: dark) {
 	:root {
 		--color-gray-20: #e0e0e0;
-		--color-gray-50: #C0C0C0;
+		--color-gray-50: #c0c0c0;
 		--color-gray-90: #dad8d8;
 
 		/* --text-color is assigned to --color-gray-_ above */
@@ -43,10 +46,10 @@
 		--text-color-link-active: #6969f7;
 		--text-color-link-visited: #a6a6f8;
 
-		--background-color: #15202b;
+		--darkblue: #011627;
+		--image-filter: grayscale(50%);
 	}
 }
-
 
 /* Global stylesheet */
 * {
@@ -59,13 +62,11 @@ body {
 	margin: 0 auto;
 	font-family: var(--font-family);
 	color: var(--text-color);
-	background-color: var(--background-color);
 }
-html {
-	overflow-y: scroll;
-}
+html,
 body {
-	max-width: 40em;
+	background-color: var(--darkblue);
+	max-width: 50em;
 }
 
 /* https://www.a11yproject.com/posts/how-to-hide-content/ */
@@ -136,7 +137,7 @@ code {
 	font-family: var(--font-family-monospace);
 }
 pre:not([class*="language-"]) {
-	margin: .5em 0;
+	margin: 0.5em 0;
 	line-height: 1.375; /* 22px /16 */
 	-moz-tab-size: var(--syntax-tab-size);
 	-o-tab-size: var(--syntax-tab-size);
@@ -157,7 +158,7 @@ code {
 /* Header */
 header {
 	display: flex;
-	gap: 1em .5em;
+	gap: 1em 0.5em;
 	flex-wrap: wrap;
 	align-items: center;
 	padding: 1em;
@@ -222,8 +223,8 @@ header {
 	font-size: 1.1875em; /* 19px /16 */
 	font-weight: 700;
 	flex-basis: calc(100% - 1.5rem);
-	padding-left: .25em;
-	padding-right: .5em;
+	padding-left: 0.25em;
+	padding-right: 0.5em;
 	text-underline-position: from-font;
 	text-underline-offset: 0;
 	text-decoration-thickness: 1px;
@@ -248,7 +249,7 @@ header {
 .post-metadata {
 	display: inline-flex;
 	flex-wrap: wrap;
-	gap: .5em;
+	gap: 0.5em;
 	list-style: none;
 	padding: 0;
 	margin: 0;
@@ -262,7 +263,7 @@ header {
 	text-decoration: none;
 	font-style: normal;
 	font-size: 1em;
-	margin-left: .1em;
+	margin-left: 0.1em;
 }
 a[href].header-anchor,
 a[href].header-anchor:visited {
@@ -277,6 +278,16 @@ a[href].header-anchor:focus,
 	color: #aaa;
 }
 
+img,
+svg {
+	display: block;
+	margin: 0 auto;
+	max-width: 100%;
+	height: auto;
+	@media (prefers-color-scheme: dark) {
+		filter: invert(0.862745) hue-rotate(180deg);
+	}
+}
 h2 + .header-anchor {
 	font-size: 1.5em;
 }</style>
@@ -290,7 +301,6 @@ h2 + .header-anchor {
 				<h2 class="visually-hidden">Top level navigation menu</h2>
 				<ul class="nav">
 					<li class="nav-item"><a href="/">Home</a></li>
-					<li class="nav-item"><a href="/blog/">Archive</a></li>
 					<li class="nav-item"><a href="/about/" aria-current="page">About Me</a></li>
 				</ul>
 			</nav>
@@ -298,9 +308,9 @@ h2 + .header-anchor {
 
 		<main id="skip">
 			<h1 id="about-me" tabindex="-1">About Me <a class="header-anchor" href="#about-me">#</a></h1>
-<p>I work on <a href="https://react.dev/">React</a> at Meta. Previously, I used to work on
+<p>⛳ Chennai → SF → London</p>
+<p>I work on <a href="https://react.dev/">React</a> at Meta. Previously, I worked on
 <a href="https://v8.dev/">V8</a> at Google.</p>
-<p>Chennai → SF → London ⛳</p>
 
 		</main>
 
