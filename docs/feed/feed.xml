@@ -21,8 +21,7 @@ optimising compilers). As a consequence of &lt;em&gt;speculatively&lt;/em&gt; op
 JavaScript function, some of these speculations might get invalidated causing a
 JavaScript function to be de-optimised back to (potentially) slower code.&lt;/p&gt;
 &lt;p&gt;I had an interesting chat with a &lt;a href=&quot;https://twitter.com/zmofei&quot;&gt;colleague&lt;/a&gt; about the curious case of functions
-deoptimising &lt;em&gt;without&lt;/em&gt; being invoked. While procrastinating on a
-completely &lt;a href=&quot;https://www.reactindia.io/speakers/sathya-gunasekaran&quot;&gt;separate talk&lt;/a&gt; prep, I ended up writing this post.&lt;/p&gt;
+deoptimising &lt;em&gt;without&lt;/em&gt; being invoked. While prepping for a &lt;a href=&quot;https://www.reactindia.io/speakers/sathya-gunasekaran&quot;&gt;talk&lt;/a&gt;, I got sidetracked and wrote this post.&lt;/p&gt;
 &lt;h2 id=&quot;the-playground&quot; tabindex=&quot;-1&quot;&gt;The playground &lt;a class=&quot;header-anchor&quot; href=&quot;https://www.recompiled.dev/blog/deopt/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Let&#39;s look at a simple &lt;code&gt;load&lt;/code&gt; function that loads a known property from an object and returns it.&lt;/p&gt;
 &lt;pre class=&quot;language-javascript&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-javascript&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; x &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;token literal-property property&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
