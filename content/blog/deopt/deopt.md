@@ -12,8 +12,9 @@ description: "This article explains how a deoptimisation can occur as a side eff
 All popular JavaScript engines ship with optimising compilers (often, several
 optimising compilers). As a consequence of _speculatively_ optimising a
 JavaScript function, some of these speculations might get invalidated causing a
-JavaScript function to be de-optimised back to (slower) code. We're going to look at the
-curious case of functions getting deoptimised _without_ being invoked.
+JavaScript function to be de-optimised back to (potentially) slower code. We're
+going to look at the curious case of functions getting deoptimised _without_
+being invoked.
 
 Let's look at a simple `load` function that loads a known property from an object and returns it.
 
