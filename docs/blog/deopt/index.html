@@ -503,8 +503,9 @@ span#name:hover:after {
 <p>All popular JavaScript engines ship with optimising compilers (often, several
 optimising compilers). As a consequence of <em>speculatively</em> optimising a
 JavaScript function, some of these speculations might get invalidated causing a
-JavaScript function to be de-optimised back to (slower) code. We're going to look at the
-curious case of functions getting deoptimised <em>without</em> being invoked.</p>
+JavaScript function to be de-optimised back to (potentially) slower code. We're
+going to look at the curious case of functions getting deoptimised <em>without</em>
+being invoked.</p>
 <p>Let's look at a simple <code>load</code> function that loads a known property from an object and returns it.</p>
 <pre class="language-javascript" tabindex="0"><code class="language-javascript"><span class="token keyword">const</span> x <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">foo</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
 
