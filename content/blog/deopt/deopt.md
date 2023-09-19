@@ -14,7 +14,7 @@ optimising compilers). As a consequence of _speculatively_ optimising a
 JavaScript function, some of these speculations might get invalidated causing a
 JavaScript function to be de-optimised back to (potentially) slower code.
 
-I had a interesting chat with a colleague about the curious case of functions
+I had a interesting chat with a [colleague](https://twitter.com/zmofei) about the curious case of functions
 deoptimising _without_ being invoked. While procrastinating for a
 completely separate talk prep, I ended up writing this post.
 
