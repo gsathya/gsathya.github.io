@@ -190,6 +190,11 @@ the curious.
 
 ## it's ok
 
+There's a whole slew of [other
+reasons](https://source.chromium.org/chromium/chromium/src/+/main:v8/src/compiler/compilation-dependencies.cc;l=22-41;drc=a6bdc8f2993883fc55eb9cb0945694299b056675)
+that could side effect a deopt. v8 calls
+this category of deopts as _lazy_ deopts (as opposed to _eager deopts_).
+
 I don't think this is necessarily a reason to entirely stop using expandos and
 switch to using WeakMaps -- WeakMaps come with other tradeoffs.
 
