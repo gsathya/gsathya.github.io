@@ -119,9 +119,9 @@ causes the shared hidden class to become unstable. The optimised code not only
 depends on the value of the property and the hidden class, but also on the
 &lt;em&gt;stability&lt;/em&gt; of the hidden class.&lt;/p&gt;
 &lt;p&gt;But, why does the stability matter? The answer to any question in the v8 codebase is
-simply -- &lt;em&gt;performance&lt;/em&gt; -- stable maps help generate v8 better, more optimised code. Seth goes into more detail
-&lt;a href=&quot;https://www.mail-archive.com/v8-dev@googlegroups.com/msg160069.html&quot;&gt;here&lt;/a&gt;, for
-the curious.&lt;/p&gt;
+simply -- &lt;em&gt;performance&lt;/em&gt; -- stable maps help generate v8 better, more optimised
+code. For the more curious, Seth goes into more detail about stable maps
+&lt;a href=&quot;https://www.mail-archive.com/v8-dev@googlegroups.com/msg160069.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&quot;it-s-ok&quot; tabindex=&quot;-1&quot;&gt;it&#39;s ok &lt;a class=&quot;header-anchor&quot; href=&quot;https://www.recompiled.dev/blog/deopt/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;There&#39;s a whole slew of &lt;a href=&quot;https://source.chromium.org/chromium/chromium/src/+/main:v8/src/compiler/compilation-dependencies.cc;l=22-41;drc=a6bdc8f2993883fc55eb9cb0945694299b056675&quot;&gt;other
 reasons&lt;/a&gt;

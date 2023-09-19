@@ -184,9 +184,9 @@ depends on the value of the property and the hidden class, but also on the
 _stability_ of the hidden class.
 
 But, why does the stability matter? The answer to any question in the v8 codebase is
-simply -- _performance_ -- stable maps help generate v8 better, more optimised code. Seth goes into more detail
-[here](https://www.mail-archive.com/v8-dev@googlegroups.com/msg160069.html), for
-the curious.
+simply -- _performance_ -- stable maps help generate v8 better, more optimised
+code. For the more curious, Seth goes into more detail about stable maps
+[here](https://www.mail-archive.com/v8-dev@googlegroups.com/msg160069.html).
 
 ## it's ok
 
