@@ -185,8 +185,9 @@ _stability_ of the hidden class.
 
 But, why does the stability matter? The answer to any question in the v8 codebase is
 simply -- _performance_ -- stable maps help generate better, more optimised
-code. For the more curious, Seth goes into more detail about stable maps
-[here](https://www.mail-archive.com/v8-dev@googlegroups.com/msg160069.html).
+code. Seth goes into more detail about stable maps
+[here](https://www.mail-archive.com/v8-dev@googlegroups.com/msg160069.html), if
+you're curious.
 
 ## it's ok
 
