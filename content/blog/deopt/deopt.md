@@ -190,7 +190,7 @@ code. Seth goes into more detail about stable maps
 [here](https://www.mail-archive.com/v8-dev@googlegroups.com/msg160069.html), if
 you're curious.
 
-## it's ok
+## Takeaways
 
 There's a whole slew of [other
 reasons](https://source.chromium.org/chromium/chromium/src/+/main:v8/src/compiler/compilation-dependencies.cc;l=22-41;drc=a6bdc8f2993883fc55eb9cb0945694299b056675)
