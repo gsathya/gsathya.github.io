@@ -566,11 +566,11 @@ to be stuck in a loop deoptimising and re-optimising.</p>
 <p>To double check, let's change the value once again.</p>
 <pre class="language-javascript" tabindex="0"><code class="language-javascript"><span class="token function">bench</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// optimise `load`</span>
 
-x<span class="token punctuation">.</span>foo <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+x<span class="token punctuation">.</span>foo <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span> <span class="token comment">// causes a deopt</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"re-optimising load"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">bench</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-x<span class="token punctuation">.</span>foo <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span></code></pre>
+x<span class="token punctuation">.</span>foo <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span> <span class="token comment">// another deopt?</span></code></pre>
 <p>Does this deopt now?</p>
 <pre class="language-bash" tabindex="0"><code class="language-bash">❯ ~/.jsvu/v8-debug --trace-deopt test.js <span class="token operator">|</span> <span class="token function">grep</span> load
 deoptimising load

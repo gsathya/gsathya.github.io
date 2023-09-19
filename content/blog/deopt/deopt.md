@@ -118,11 +118,11 @@ To double check, let's change the value once again.
 ```javascript
 bench(); // optimise `load`
 
-x.foo = 5;
+x.foo = 5; // causes a deopt
 console.log("re-optimising load");
 bench();
 
-x.foo = 6;
+x.foo = 6; // another deopt?
 ```
 
 Does this deopt now?
