@@ -99,11 +99,7 @@ console.log("re-optimising load");
 bench();
 ```
 
-The optimised code looks different now! v8 has learnt that this value isn't a
-constant, and it's not a good idea to inline the value directly. Of course,
-inlining the value is strictly better because it's faster, but only when value
-doesn't change. Otherwise we're going to be stuck in a loop deoptimising and
-re-optimising.
+The optimised code looks different now!
 
 ```armasm
 ...
@@ -111,6 +107,11 @@ re-optimising.
 --   8: LoadTaggedField(0xc, decompressed)
 ...
 ```
+
+v8 has learnt that this value isn't a constant, and it's not a good idea to
+inline the value directly. Of course, inlining the value is strictly better
+because it's faster, but only when value doesn't change. Otherwise we're going
+to be stuck in a loop deoptimising and re-optimising.
 
 To double check, let's change the value once again.
 
@@ -133,7 +134,7 @@ deoptimising load
 re-optimising load
 ```
 
-No! v8 simply loads the property at runtime now.
+No! v8 simply loads the property at runtime.
 
 ## Expandos considered harmful
 
@@ -161,7 +162,7 @@ Sure enough. This is because we've not only got a dependency on the value of the
 Let's look at slightly more ~~terrifying~~ baffling example.
 
 ```javascript
-bench(); // optimises `load`
+bench(); // optimise `load`
 
 const y = { foo: 1 };
 y.__expando = 4;
@@ -178,8 +179,9 @@ This still deopts!
 
 I _lied_ when I said `x` and `y` don't share anything -- they share the same
 [hidden class](https://v8.dev/docs/hidden-classes)! Adding an expando on `y`
-causes the shared hidden class to become unstable. v8 not only depends on the
-value and the hidden class, but also on the _stability_ of the hidden class.
+causes the shared hidden class to become unstable. The optimised code not only
+depends on the value of the property and the hidden class, but also on the
+_stability_ of the hidden class.
 
 But, why does the stability matter? The answer to any question in the v8 codebase is
 simply -- _performance_ -- stable maps help generate v8 better, more optimised code. Seth goes into more detail
