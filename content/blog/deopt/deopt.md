@@ -150,7 +150,7 @@ bench(); // optimise `load`
 x.__expando = 2; // hidden class transition
 ```
 
-Notice how after adding the [expando](https://developer.mozilla.org/en-US/docs/Glossary/Expando), we haven't invoked `foo` nor have we changed the value of `foo`. Does this still cause a deopt?
+Notice how after adding the [expando](https://developer.mozilla.org/en-US/docs/Glossary/Expando), we haven't invoked `load` nor have we changed the value of `foo`. Does this still cause a deopt?
 
 ```bash
 ❯ ~/.jsvu/v8-debug --trace-deopt test.js | grep load

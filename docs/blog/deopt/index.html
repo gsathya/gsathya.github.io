@@ -584,7 +584,7 @@ re-optimising load</code></pre>
 <pre class="language-javascript" tabindex="0"><code class="language-javascript"><span class="token function">bench</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// optimise `load`</span>
 
 x<span class="token punctuation">.</span>__expando <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span> <span class="token comment">// hidden class transition</span></code></pre>
-<p>Notice how after adding the <a href="https://developer.mozilla.org/en-US/docs/Glossary/Expando">expando</a>, we haven't invoked <code>foo</code> nor have we changed the value of <code>foo</code>. Does this still cause a deopt?</p>
+<p>Notice how after adding the <a href="https://developer.mozilla.org/en-US/docs/Glossary/Expando">expando</a>, we haven't invoked <code>load</code> nor have we changed the value of <code>foo</code>. Does this still cause a deopt?</p>
 <pre class="language-bash" tabindex="0"><code class="language-bash">❯ ~/.jsvu/v8-debug --trace-deopt test.js <span class="token operator">|</span> <span class="token function">grep</span> load
 <span class="token punctuation">[</span>marking dependent code <span class="token operator">&lt;</span>load<span class="token operator">></span> <span class="token keyword">for</span> deoptimization, reason: code dependencies<span class="token punctuation">]</span></code></pre>
 <p>Sure enough. This is because we've not only got a dependency on the value of the property, but also on the hidden class of the object.</p>
