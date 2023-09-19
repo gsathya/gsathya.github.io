@@ -33,6 +33,14 @@
 		{#- Renders the CSS bundle using a separate file, if you can't set CSP directive style-src: 'unsafe-inline' #}
 		{#- <link rel="stylesheet" href="{% getBundleFileUrl "css" %}"> #}
 	</head>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-HNCTVD2H2Q"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-HNCTVD2H2Q');
+	</script>
 	<body>
 		<a href="#skip" class="visually-hidden">Skip to main content</a>
 
