@@ -193,4 +193,4 @@ the curious.
 I don't think this is necessarily a reason to entirely stop using expandos and
 switch to using WeakMaps -- WeakMaps come with other tradeoffs.
 
-The best JS performance tip is to write code that expresses intent clearly and let the engine optimise it. v8 does a great job of learning from feedback and re-optimising code.
+The best JS performance tip is to write code that expresses intent clearly and let the engine optimise it.

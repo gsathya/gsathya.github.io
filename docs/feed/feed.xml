@@ -125,7 +125,7 @@ the curious.&lt;/p&gt;
 &lt;h2 id=&quot;it-s-ok&quot; tabindex=&quot;-1&quot;&gt;it&#39;s ok &lt;a class=&quot;header-anchor&quot; href=&quot;https://www.recompiled.dev/blog/deopt/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;I don&#39;t think this is necessarily a reason to entirely stop using expandos and
 switch to using WeakMaps -- WeakMaps come with other tradeoffs.&lt;/p&gt;
-&lt;p&gt;The best JS performance tip is to write code that expresses intent clearly and let the engine optimise it. v8 does a great job of learning from feedback and re-optimising code.&lt;/p&gt;
+&lt;p&gt;The best JS performance tip is to write code that expresses intent clearly and let the engine optimise it.&lt;/p&gt;
 </content>
 	</entry>
 	
