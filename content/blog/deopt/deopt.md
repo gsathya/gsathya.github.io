@@ -12,9 +12,13 @@ description: "This article explains how a deoptimisation can occur as a side eff
 All popular JavaScript engines ship with optimising compilers (often, several
 optimising compilers). As a consequence of _speculatively_ optimising a
 JavaScript function, some of these speculations might get invalidated causing a
-JavaScript function to be de-optimised back to (potentially) slower code. We're
-going to look at the curious case of functions getting deoptimised _without_
-being invoked.
+JavaScript function to be de-optimised back to (potentially) slower code.
+
+I had a interesting chat with a colleague about the curious case of functions
+deoptimising _without_ being invoked. While procrastinating for a
+completely separate talk prep, I ended up writing this post.
+
+## The playground
 
 Let's look at a simple `load` function that loads a known property from an object and returns it.
 
@@ -52,6 +56,8 @@ Sure enough, v8 spews logging to confirm.
 <div class="message-box">
 	<p>v8 has <a href="https://blog.chromium.org/2023/06/how-chrome-achieved-high-scores-on.html">several tiers of optimising compilers</a>, we're only looking at Maglev code here as Turbofan simply inlines <code>load</code> into <code>bench</code>, which isn't very interesting for our purposes.</p>
 </div>
+
+## Side effecting a deopt
 
 Now that we've got our playground setup, let's try to side effect a deopt by updating the value of `foo`:
 
