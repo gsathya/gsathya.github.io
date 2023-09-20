@@ -4,7 +4,7 @@ author: "[Sathya Gunasekaran](https://twitter.com/_gsathya)"
 date: 2023-09-19 13:33:37
 tags:
   - v8
-description: "This article explains how a deoptimisation can occur as a side effect in Javascript, but more specially in v8."
+description: "This article explains how a deoptimisation can occur as a side effect in Javascript, especially in v8."
 imageUrl: "deopt-snippet.png"
 ---
 
