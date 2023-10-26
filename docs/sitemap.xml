@@ -45,4 +45,9 @@
 		<loc>https://www.recompiled.dev/about/</loc>
 		<lastmod>2023-10-26</lastmod>
 	</url>
+	
+	<url>
+		<loc>https://www.recompiled.dev/blog/</loc>
+		<lastmod>2023-10-26</lastmod>
+	</url>
 </urlset>

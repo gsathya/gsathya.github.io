@@ -9,7 +9,7 @@
 		<link rel="alternate" href="/feed/feed.json" type="application/json" title="Recompiled">
 		<meta name="generator" content="Eleventy v2.0.1">
 		
-		<style>.postlist { counter-reset: start-from 3 }
+		<style>.postlist { counter-reset: start-from 4 }
 /* Message Box */
 .message-box {
 	--color-message-box: #ffc;
@@ -79,11 +79,13 @@ body {
 	margin: 0 auto;
 	font-family: var(--font-family);
 	color: var(--text-color);
-}
-html,
-body {
 	background-color: var(--darkblue);
+}
+body {
 	max-width: 50em;
+}
+html {
+	overflow-y: scroll;
 }
 
 /* https://www.a11yproject.com/posts/how-to-hide-content/ */
@@ -307,7 +309,20 @@ span#name:hover:after {
 #title-text {
 	min-height: 2em;
 }</style>
+		
+		<meta name="twitter:site" content="@_gsathya">
+		<meta name="twitter:title" content="Recompiled">
+		<meta name="twitter:description" content="I write about compilers and JavaScript">
+
 	</head>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-HNCTVD2H2Q"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-HNCTVD2H2Q');
+	</script>
 	<body>
 		<a href="#skip" class="visually-hidden">Skip to main content</a>
 
@@ -316,21 +331,27 @@ span#name:hover:after {
 			<nav>
 				<h2 class="visually-hidden">Top level navigation menu</h2>
 				<ul class="nav">
-					<li class="nav-item"><a href="/">Home</a></li>
-					<li class="nav-item"><a href="/blog/" aria-current="page">Blog</a></li>
 					<li class="nav-item"><a href="/about/">About Me</a></li>
 				</ul>
 			</nav>
+				<a href="https://github.com/gsathya" target="_blank"><img alt="github" src="/img/github.png" width="20" height="20"></a>
+				<a href="https://twitter.com/_gsathya" target="_blank"><img alt="twitter" src="/img/twitter.png" width="20" height="20"></a>
+				<a href="https://linkedin.com/in/sathyagunasekaran" target="_blank"><img alt="linkedin" src="/img/linkedin.png" width="20" height="20"></a>
 		</header>
 
 		<main id="skip">
 			
 
-<h1>Archive</h1>
+<h1>Blog</h1>
 
 
 
 <ul reversed class="postlist">
+
+	<li class="postlist-item">
+		<a href="/blog/deopt/" class="postlist-link">Side effecting a deopt</a>
+		<time class="postlist-date" datetime="2023-09-19">September 2023</time>
+	</li>
 
 	<li class="postlist-item">
 		<a href="/blog/intl/" class="postlist-link">Internationalization APIs in V8</a>
