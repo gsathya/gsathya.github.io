@@ -22,11 +22,6 @@
 	</url>
 	
 	<url>
-		<loc>https://www.recompiled.dev/</loc>
-		<lastmod>2023-09-19</lastmod>
-	</url>
-	
-	<url>
 		<loc>https://www.recompiled.dev/tags/</loc>
 		<lastmod>2023-09-19</lastmod>
 	</url>
@@ -44,5 +39,10 @@
 	<url>
 		<loc>https://www.recompiled.dev/tags/intl/</loc>
 		<lastmod>2023-09-19</lastmod>
+	</url>
+	
+	<url>
+		<loc>https://www.recompiled.dev/</loc>
+		<lastmod>2023-10-26</lastmod>
 	</url>
 </urlset>
