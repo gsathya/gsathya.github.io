@@ -179,6 +179,9 @@ header {
 .nav a[href][aria-current="page"] {
 	text-decoration: underline;
 }
+.nav-item.icon {
+	margin-right: 0.5em;
+}
 
 /* Posts list */
 .postlist {
