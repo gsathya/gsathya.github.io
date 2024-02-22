@@ -593,7 +593,7 @@ span#name:hover:after {
 <p>Consider our previously example, but slightly modified to track the value separately by giving them different identifiers:</p>
 <pre class="language-js" tabindex="0"><code class="language-js">  <span class="token keyword">let</span> styles<span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>hover<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    t0 <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span> <span class="token comment">//              &lt;-- separate value</span>
+    t0 <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span>              <span class="token comment">// &lt;-- separate value</span>
   <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
     t1 <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">colours</span><span class="token operator">:</span> hoverColours<span class="token punctuation">}</span><span class="token punctuation">;</span> <span class="token comment">// &lt;-- separate value</span>
   <span class="token punctuation">}</span>
@@ -674,7 +674,6 @@ inside the <code>if</code>-block and <code>else</code>-block separately.</p>
 <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
 	styles <span class="token operator">=</span> $<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p>This code is now correct!</p>
 <h3 id="compiler-theory" tabindex="-1">Compiler theory <a class="header-anchor" href="#compiler-theory">#</a></h3>
 <p>To recap, we've talked about tracking values separately with temporary identifiers and tracking the flow of values across control flow with a &quot;choose&quot; function.</p>
 <p>Interestingly, a classical compiler transformation called <a href="https://en.wikipedia.org/wiki/Static_single-assignment_form">Static single-assignment form</a> (SSA) does exactly this! Tracking new values and re-assignments by creating a new temporary value is the core part of the SSA transform. The &quot;<em>choose</em>&quot; function we talked about earlier is simply the &quot;<em>phi</em>&quot; (Φ) function defined in the SSA form.</p>

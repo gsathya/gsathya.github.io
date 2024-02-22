@@ -108,7 +108,7 @@ Consider our previously example, but slightly modified to track the value separa
 ```js
   let styles;
   if (!hover) {
-    t0 = { colours }; //              <-- separate value
+    t0 = { colours };              // <-- separate value
   } else {
     t1 = { colours: hoverColours}; // <-- separate value
   }
@@ -216,8 +216,6 @@ if ($[0] !== hover || $[1] !== colours || $[2] !== hoverColours) {
 	styles = $[3];
 }
 ```
-
-This code is now correct!
 
 ### Compiler theory
 
