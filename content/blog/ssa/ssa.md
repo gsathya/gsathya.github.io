@@ -106,13 +106,13 @@ One core intuition is that we'd memoize the values in the `if` block separately 
 Consider our previously example, but slightly modified to track the value separately by giving them different identifiers:
 
 ```js
-  let styles;
-  if (!hover) {
-    t0 = { colours };              // <-- separate value
-  } else {
-    t1 = { colours: hoverColours}; // <-- separate value
-  }
-  styles = choose(t0 or t1);
+let styles;
+if (!hover) {
+  t0 = { colours };              // <-- separate value
+} else {
+  t1 = { colours: hoverColours}; // <-- separate value
+}
+styles = choose(t0 or t1);
 ```
 
 Now, it's pretty clear that we can memoize `temp1` and `temp2` separately. You've also realized that we need to choose between `t0` and `t1` and assign it correctly to `styles`, but let's ignore that for now.
@@ -120,28 +120,28 @@ Now, it's pretty clear that we can memoize `temp1` and `temp2` separately. You'v
 The compiler can memoize the values in their respective blocks:
 
 ```js
-  if (!hover) {
-    if ($[0] !== colours) {
-      t0 = {
-        colours,
-      };
-      $[0] = colours;
-      $[1] = t0;
-    } else {
-      t0 = $[1];
-    }
-  } else {
-    if ($[2] !== hoverColours) {
-      t1 = {
-        colours: hoverColours,
-      };
-      $[2] = hoverColours;
-      $[3] = t1;
-    } else {
-      t1 = $[3];
-    }
-  }
-  styles = choose(t0 or t1)
+if (!hover) {
+	if ($[0] !== colours) {
+		t0 = {
+			colours,
+		};
+		$[0] = colours;
+		$[1] = t0;
+	} else {
+		t0 = $[1];
+	}
+} else {
+	if ($[2] !== hoverColours) {
+		t1 = {
+			colours: hoverColours,
+		};
+		$[2] = hoverColours;
+		$[3] = t1;
+	} else {
+		t1 = $[3];
+	}
+}
+styles = choose(t0 or t1)
 ```
 
 This is more _fine grained_ than the previous example.
@@ -182,13 +182,13 @@ We need a way to track the values as they _flow_, not just simply memoize it in 
 Remember the "`choose`" function, we ignored earlier? This lets the compiler track the values as they flow across if-else block!
 
 ```js
-  if (hover) {
-    t0 = { colours };
-  } else {
-    t1 = { colours: hoverColours};
-  }
-  styles = choose(t0 or t1); // <-- tracks values after control flow
-  styles.height = 'large';
+if (hover) {
+  t0 = { colours };
+} else {
+  t1 = { colours: hoverColours};
+}
+styles = choose(t0 or t1); // <-- tracks values after control flow
+styles.height = 'large';
 ```
 
 Now, the code (or to be precise, the compiler's [intermediate representation](https://en.wikipedia.org/wiki/Intermediate_representation)) tells the compiler that `styles` is either `t0` or `t1` and modifying `styles` is equivalent to modifying the values `t0` and `t1`.
