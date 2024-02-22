@@ -46,6 +46,7 @@
 &lt;p&gt;The compiler can easily track the &lt;code&gt;styles&lt;/code&gt; object being created and passed down as props.&lt;/p&gt;
 &lt;div class=&quot;message-box&quot;&gt;
 	&lt;p&gt;&lt;em&gt;Don&#39;t worry too much about the useMemoCache hook, it&#39;s an internal API used by the compiler to cache values. Think of `$` as an array.&lt;/em&gt;&lt;/p&gt;
+  &lt;p&gt;&lt;em&gt;The React Compiler can memoize JSX too, but I&#39;m leaving it out in this post for brevity.&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;Now, let&#39;s say you want to refactor the styles based on a condition.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Component&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; colours&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; hover&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; hoverColours &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
@@ -130,7 +131,7 @@ styles &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span clas
 	styles&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;height &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;large&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// &amp;lt;-- modifying styles object&lt;/span&gt;
 	&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Item styles&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;styles&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;Item&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;In the above example, we modify the styles object after the &lt;code&gt;if-else&lt;/code&gt; block by
+&lt;p&gt;In the above example, we modify the &lt;code&gt;styles&lt;/code&gt; object after the &lt;code&gt;if-else&lt;/code&gt; block by
 adding a new property named &lt;code&gt;height&lt;/code&gt;. It&#39;s no longer safe to memoize the values
 inside the &lt;code&gt;if&lt;/code&gt;-block and &lt;code&gt;else&lt;/code&gt;-block separately.&lt;/p&gt;
 &lt;p&gt;We can&#39;t modify a value after it&#39;s memoized. Not because it&#39;s sub-optimal performance-wise, but because it leads to incorrect behavior during re-rendering. Take a minute to think about how this behavior can manifest in practice.&lt;/p&gt;

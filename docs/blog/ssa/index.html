@@ -552,6 +552,7 @@ span#name:hover:after {
 <p>The compiler can easily track the <code>styles</code> object being created and passed down as props.</p>
 <div class="message-box">
 	<p><em>Don't worry too much about the useMemoCache hook, it's an internal API used by the compiler to cache values. Think of `$` as an array.</em></p>
+  <p><em>The React Compiler can memoize JSX too, but I'm leaving it out in this post for brevity.</em></p>
 </div>
 <p>Now, let's say you want to refactor the styles based on a condition.</p>
 <pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> colours<span class="token punctuation">,</span> hover<span class="token punctuation">,</span> hoverColours <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -636,7 +637,7 @@ styles <span class="token operator">=</span> <span class="token function">choose
 	styles<span class="token punctuation">.</span>height <span class="token operator">=</span> <span class="token string">"large"</span><span class="token punctuation">;</span> <span class="token comment">// &lt;-- modifying styles object</span>
 	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>Item<span class="token operator">></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p>In the above example, we modify the styles object after the <code>if-else</code> block by
+<p>In the above example, we modify the <code>styles</code> object after the <code>if-else</code> block by
 adding a new property named <code>height</code>. It's no longer safe to memoize the values
 inside the <code>if</code>-block and <code>else</code>-block separately.</p>
 <p>We can't modify a value after it's memoized. Not because it's sub-optimal performance-wise, but because it leads to incorrect behavior during re-rendering. Take a minute to think about how this behavior can manifest in practice.</p>

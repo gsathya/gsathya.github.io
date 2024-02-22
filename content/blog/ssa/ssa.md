@@ -52,6 +52,8 @@ The compiler can easily track the `styles` object being created and passed down 
 
 <div class="message-box">
 	<p><em>Don't worry too much about the useMemoCache hook, it's an internal API used by the compiler to cache values. Think of `$` as an array.</em></p>
+
+  <p><em>The React Compiler can memoize JSX too, but I'm leaving it out in this post for brevity.</em></p>
 </div>
 
 Now, let's say you want to refactor the styles based on a condition.
