@@ -13,8 +13,6 @@ description: "The post describes how the React Compiler uses SSA form for fine g
 
 # Compiler theory and Reactivity
 
-### React Compiler
-
 The React compiler implements numerous traditional compiler transformations, that are generally not accessible without having some background in compiler theory. In this post, I'll explain a compiler pass called Static Single Assignment form (SSA) using a motivating example.
 
 <div class="message-box">

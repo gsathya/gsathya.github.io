@@ -17,7 +17,6 @@
 		<updated>2024-02-22T16:45:37Z</updated>
 		<id>https://www.recompiled.dev/blog/ssa-react-compiler/</id>
 		<content type="html">&lt;h1 id=&quot;compiler-theory-and-reactivity&quot; tabindex=&quot;-1&quot;&gt;Compiler theory and Reactivity &lt;a class=&quot;header-anchor&quot; href=&quot;https://www.recompiled.dev/blog/ssa-react-compiler/&quot;&gt;#&lt;/a&gt;&lt;/h1&gt;
-&lt;h3 id=&quot;react-compiler&quot; tabindex=&quot;-1&quot;&gt;React Compiler &lt;a class=&quot;header-anchor&quot; href=&quot;https://www.recompiled.dev/blog/ssa-react-compiler/&quot;&gt;#&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;The React compiler implements numerous traditional compiler transformations, that are generally not accessible without having some background in compiler theory. In this post, I&#39;ll explain a compiler pass called Static Single Assignment form (SSA) using a motivating example.&lt;/p&gt;
 &lt;div class=&quot;message-box&quot;&gt;
 	&lt;p&gt;If you&#39;re wondering what the React compiler is, I recommend reading our recent &lt;a href=&quot;https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler&quot;&gt;update post&lt;/a&gt; for some background.&lt;/p&gt;
