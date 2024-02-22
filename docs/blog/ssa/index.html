@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Compiler Theory and Reactivity</title>
+		<meta name="description" content="The post describes how the React Compiler uses SSA form for fine grained reactivity">
+		<link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Recompiled">
+		<link rel="alternate" href="/feed/feed.json" type="application/json" title="Recompiled">
+		<meta name="generator" content="Eleventy v2.0.1">
+		
+		<style>/* Message Box */
+.message-box {
+	--color-message-box: #ffc;
+
+	display: block;
+	background-color: var(--color-message-box);
+	color: var(--color-gray-90);
+	padding: 1em 0.625em; /* 16px 10px /16 */
+	margin: 0.5em;
+}
+
+@media (prefers-color-scheme: dark) {
+	.message-box {
+		--color-message-box: #021e36;
+	}
+}
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}
+* { box-sizing: border-box; }
+/* Defaults */
+:root {
+	--font-family: -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono,
+		Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono,
+		Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New,
+		Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #c0c0c0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #082840;
+	--text-color-link-active: #5f2b48;
+	--text-color-link-visited: #17050f;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #c0c0c0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #6969f7;
+		--text-color-link-visited: #a6a6f8;
+
+		--darkblue: #011627;
+		--image-filter: grayscale(50%);
+	}
+}
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+	background-color: var(--darkblue);
+}
+body {
+	max-width: 50em;
+}
+html {
+	overflow-y: scroll;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main {
+	padding: 1rem;
+}
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+header:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.links-nextprev {
+	list-style: none;
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+
+table {
+	margin: 1em 0;
+}
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+pre:not([class*="language-"]) {
+	margin: 0.5em 0;
+	line-height: 1.375; /* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+}
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em 0.5em;
+	flex-wrap: wrap;
+	align-items: center;
+	padding: 1em;
+}
+.home-link {
+	font-size: 1em; /* 16px /16 */
+	font-weight: 700;
+	margin-right: 2em;
+}
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.nav-item {
+	display: inline-block;
+	margin-right: 1em;
+}
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+.nav-item.icon {
+	margin-right: 0.5em;
+}
+
+/* Posts list */
+.postlist {
+	list-style: none;
+	padding: 0;
+}
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+.postlist-date {
+	font-size: 0.8125em; /* 13px /16 */
+	color: var(--color-gray-90);
+}
+.postlist-date {
+	word-spacing: -0.5px;
+}
+.postlist-link {
+	font-size: 1.1875em; /* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+.postlist-item > .post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.post-metadata time {
+	margin-right: 1em;
+}
+
+/* Direct Links / Markdown Headers */
+.header-anchor {
+	text-decoration: none;
+	font-style: normal;
+	font-size: 1em;
+	margin-left: 0.1em;
+}
+a[href].header-anchor,
+a[href].header-anchor:visited {
+	color: transparent;
+}
+a[href].header-anchor:focus,
+a[href].header-anchor:hover {
+	text-decoration: underline;
+}
+a[href].header-anchor:focus,
+:hover > a[href].header-anchor {
+	color: #aaa;
+}
+
+img,
+svg {
+	display: block;
+	margin: 0 auto;
+	max-width: 100%;
+	height: auto;
+	@media (prefers-color-scheme: dark) {
+		filter: invert(0.862745) hue-rotate(180deg);
+	}
+}
+h2 + .header-anchor {
+	font-size: 1.5em;
+}
+
+span#name:after {
+	content: "Sathya Gunasekaran";
+}
+span#name:hover:after {
+	content: "சத்யா குணசேகரன்";
+}
+
+#title-text {
+	min-height: 2em;
+}</style>
+
+		<meta name="twitter:site" content="@_gsathya">
+		<meta name="twitter:title" content="Compiler Theory and Reactivity">
+		<meta name="twitter:description" content="The post describes how the React Compiler uses SSA form for fine grained reactivity">
+
+	</head>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-HNCTVD2H2Q"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-HNCTVD2H2Q');
+	</script>
+	<body>
+		<a href="#skip" class="visually-hidden">Skip to main content</a>
+
+		<header>
+			<a href="/" class="home-link">Recompiled</a>
+			<nav>
+				<h2 class="visually-hidden">Top level navigation menu</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/blog/">Blog</a></li>
+					<li class="nav-item"><a href="/talks/">Talks</a></li>
+					<li class="nav-item"><a href="/about/">About Me</a></li>
+					<li class="nav-item icon"><a href="https://github.com/gsathya" target="_blank"><img alt="github" src="/img/github.png" width="20" height="20"></a></li>
+					<li class="nav-item icon"><a href="https://twitter.com/_gsathya" target="_blank"><img alt="twitter" src="/img/twitter.png" width="20" height="20"></a></li>
+					<li class="nav-item icon"><a href="https://linkedin.com/in/sathyagunasekaran" target="_blank"><img alt="linkedin" src="/img/linkedin.png" width="20" height="20"></a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="skip">
+			
+<h1>Compiler Theory and Reactivity</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2024-02-22">22 February 2024</time></li>
+	<li><a href="/tags/forget/" class="post-tag">Forget</a>, </li>
+	<li><a href="/tags/react/" class="post-tag">React</a>, </li>
+	<li><a href="/tags/compiler/" class="post-tag">Compiler</a></li>
+</ul>
+
+<p>The React compiler implements numerous traditional compiler transformations, that are generally not accessible without having some background in compiler theory. In this post, I'll explain a compiler pass called Static Single Assignment form (SSA) using a motivating example.</p>
+<div class="message-box">
+	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background.</em></p>
+</div>
+<p>Consider this simple React component:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> colours <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">let</span> styles <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>Item<span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>We can easily memoize it like this:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter">props</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> $ <span class="token operator">=</span> <span class="token function">useMemoCache</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">const</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span> <span class="token operator">=</span> props<span class="token punctuation">;</span>
+	<span class="token keyword">let</span> t0<span class="token punctuation">;</span>
+
+	<span class="token keyword">if</span> <span class="token punctuation">(</span>$<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">!==</span> colours<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		t0 <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+		$<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> colours<span class="token punctuation">;</span>
+		$<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> t0<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+		t0 <span class="token operator">=</span> $<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+
+	<span class="token keyword">const</span> styles <span class="token operator">=</span> t0<span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>The compiler can easily track the <code>styles</code> object being created and passed down as props.</p>
+<div class="message-box">
+	<p><em>Don't worry too much about the useMemoCache hook, it's an internal API used by the compiler to cache values. Think of `$` as an array.</em></p>
+</div>
+<p>Now, let's say you want to refactor the styles based on a condition.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> colours<span class="token punctuation">,</span> hover<span class="token punctuation">,</span> hoverColours <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">let</span> styles<span class="token punctuation">;</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>hover<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		styles <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+		styles <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">colours</span><span class="token operator">:</span> hoverColours <span class="token punctuation">}</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>Item<span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Memoizing the styles object becomes a bit more challenging for the compiler because it's no longer a single statement. It's spread across several statements, and there's control flow involved -- styles is created in both the <code>if</code> and <code>else</code> block.</p>
+<p>The compiler can still track styles creation across both blocks and memoize it like this:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter">props</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> $ <span class="token operator">=</span> <span class="token function">useMemoCache</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">const</span> <span class="token punctuation">{</span> hover<span class="token punctuation">,</span> colours<span class="token punctuation">,</span> hoverColours <span class="token punctuation">}</span> <span class="token operator">=</span> props<span class="token punctuation">;</span>
+	<span class="token keyword">let</span> styles<span class="token punctuation">;</span>
+
+	<span class="token keyword">if</span> <span class="token punctuation">(</span>$<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">!==</span> hover <span class="token operator">||</span> $<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">!==</span> colours <span class="token operator">||</span> $<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">!==</span> hoverColours<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>hover<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			styles <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+			styles <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">colours</span><span class="token operator">:</span> hoverColours <span class="token punctuation">}</span><span class="token punctuation">;</span>
+		<span class="token punctuation">}</span>
+
+		$<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> hover<span class="token punctuation">;</span>
+		$<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> colours<span class="token punctuation">;</span>
+		$<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> hoverColours<span class="token punctuation">;</span>
+		$<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> styles<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+		styles <span class="token operator">=</span> $<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>This works, but it's not ideal because we'd invalidate the memoized value if any of <code>hover</code>, <code>colours</code> or <code>hoverColours</code> changes. It's too <em>coarse grained</em>. Can we do better?</p>
+<h3 id="track-values-not-variables" tabindex="-1">Track values, not variables <a class="header-anchor" href="#track-values-not-variables">#</a></h3>
+<p>One core intuition is that we'd memoize the values in the <code>if</code> block separately from the <code>else</code> block. They are separate <em>values</em> (separate <em>objects</em>), just being referenced by the same variable identifier (<code>styles</code>).</p>
+<p>Consider our previously example, but slightly modified to track the value separately by giving them different identifiers:</p>
+<pre class="language-js" tabindex="0"><code class="language-js">  <span class="token keyword">let</span> styles<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>hover<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    t0 <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span>              <span class="token comment">// &lt;-- separate value</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    t1 <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">colours</span><span class="token operator">:</span> hoverColours<span class="token punctuation">}</span><span class="token punctuation">;</span> <span class="token comment">// &lt;-- separate value</span>
+  <span class="token punctuation">}</span>
+  styles <span class="token operator">=</span> <span class="token function">choose</span><span class="token punctuation">(</span>t0 or t1<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Now, it's pretty clear that we can memoize <code>temp1</code> and <code>temp2</code> separately. You've also realized that we need to choose between <code>t0</code> and <code>t1</code> and assign it correctly to <code>styles</code>, but let's ignore that for now.</p>
+<p>The compiler can memoize the values in their respective blocks:</p>
+<pre class="language-js" tabindex="0"><code class="language-js">  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>hover<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>$<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">!==</span> colours<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      t0 <span class="token operator">=</span> <span class="token punctuation">{</span>
+        colours<span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+      $<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> colours<span class="token punctuation">;</span>
+      $<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> t0<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      t0 <span class="token operator">=</span> $<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>$<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">!==</span> hoverColours<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      t1 <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token literal-property property">colours</span><span class="token operator">:</span> hoverColours<span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+      $<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> hoverColours<span class="token punctuation">;</span>
+      $<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> t1<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      t1 <span class="token operator">=</span> $<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  styles <span class="token operator">=</span> <span class="token function">choose</span><span class="token punctuation">(</span>t0 or t1<span class="token punctuation">)</span></code></pre>
+<p>This is more <em>fine grained</em> than the previous example.</p>
+<h3 id="where-s-the-complexity" tabindex="-1">Where's the complexity? <a class="header-anchor" href="#where-s-the-complexity">#</a></h3>
+<p>But, wait, we're just memoizing a value in the scope it was created, what's so hard about it?</p>
+<p>Well, let's consider another example:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> colours<span class="token punctuation">,</span> hover<span class="token punctuation">,</span> hoverColours <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">let</span> styles<span class="token punctuation">;</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>hover<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		styles <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+		styles <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">colours</span><span class="token operator">:</span> hoverColours <span class="token punctuation">}</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+	styles<span class="token punctuation">.</span>height <span class="token operator">=</span> <span class="token string">"large"</span><span class="token punctuation">;</span> <span class="token comment">// &lt;-- modifying styles object</span>
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>Item<span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>In the above example, we modify the styles object after the <code>if-else</code> block by
+adding a new property named <code>height</code>. It's no longer safe to memoize the values
+inside the <code>if</code>-block and <code>else</code>-block separately.</p>
+<p>We can't modify a value after it's memoized. Not because it's sub-optimal performance-wise, but because it leads to incorrect behavior during re-rendering. Take a minute to think about how this behavior can manifest in practice.</p>
+<p>We need a way to track the values as they <em>flow</em>, not just simply memoize it in the scope they are created.</p>
+<div class="message-box">
+ <p><em>One could argue that you shouldn't be writing code like this. But, local mutations are very natural in JavaScript and there's plenty of React code written like this that we need to compile efficiently.</em></p>
+</div>
+<h3 id="track-the-flow" tabindex="-1">Track the flow <a class="header-anchor" href="#track-the-flow">#</a></h3>
+<p>Remember the &quot;<code>choose</code>&quot; function, we ignored earlier? This lets the compiler track the values as they flow across if-else block!</p>
+<pre class="language-js" tabindex="0"><code class="language-js">  <span class="token keyword">if</span> <span class="token punctuation">(</span>hover<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    t0 <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    t1 <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">colours</span><span class="token operator">:</span> hoverColours<span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  styles <span class="token operator">=</span> <span class="token function">choose</span><span class="token punctuation">(</span>t0 or t1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// &lt;-- tracks values after control flow</span>
+  styles<span class="token punctuation">.</span>height <span class="token operator">=</span> <span class="token string">'large'</span><span class="token punctuation">;</span></code></pre>
+<p>Now, the code (or to be precise, the compiler's <a href="https://en.wikipedia.org/wiki/Intermediate_representation">intermediate representation</a>) tells the compiler that <code>styles</code> is either <code>t0</code> or <code>t1</code> and modifying <code>styles</code> is equivalent to modifying the values <code>t0</code> and <code>t1</code>.</p>
+<p>The compiler can now infer that the <code>styles</code> can only be memoized at a coarser level like this:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">if</span> <span class="token punctuation">(</span>$<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">!==</span> hover <span class="token operator">||</span> $<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">!==</span> colours <span class="token operator">||</span> $<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">!==</span> hoverColours<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span>hover<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		styles <span class="token operator">=</span> <span class="token punctuation">{</span>
+			colours<span class="token punctuation">,</span>
+		<span class="token punctuation">}</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+		styles <span class="token operator">=</span> <span class="token punctuation">{</span>
+			<span class="token literal-property property">colours</span><span class="token operator">:</span> hoverColours<span class="token punctuation">,</span>
+		<span class="token punctuation">}</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+
+	styles<span class="token punctuation">.</span>height <span class="token operator">=</span> <span class="token string">"large"</span><span class="token punctuation">;</span>
+	$<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> hover<span class="token punctuation">;</span>
+	$<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> colours<span class="token punctuation">;</span>
+	$<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> hoverColours<span class="token punctuation">;</span>
+	$<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> styles<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+	styles <span class="token operator">=</span> $<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="compiler-theory" tabindex="-1">Compiler theory <a class="header-anchor" href="#compiler-theory">#</a></h3>
+<p>To recap, we've talked about tracking values separately with temporary identifiers and tracking the flow of values across control flow with a &quot;choose&quot; function.</p>
+<p>Interestingly, a classical compiler transformation called <a href="https://en.wikipedia.org/wiki/Static_single-assignment_form">Static single-assignment form</a> (SSA) does exactly this! Tracking new values and re-assignments by creating a new temporary value is the core part of the SSA transform. The &quot;<em>choose</em>&quot; function we talked about earlier is simply the &quot;<em>phi</em>&quot; (Φ) function defined in the SSA form.</p>
+<p>The exact SSA transformation that the React compiler uses is from the excellent <a href="https://c9x.me/compile/bib/braun13cc.pdf">Simple and Efficient Construction of Static Single
+Assignment Form</a> paper.</p>
+<p>If you're curious to read more about compiler theory in the React compiler, take
+a look at the <a href="/tags/forget/">other tagged posts</a>.</p>
+
+<ul class="links-nextprev"><li>Previous: <a href="/blog/alias-analysis/">Alias analysis in React Compiler</a></li>
+</ul>
+
+		</main>
+
+		<footer></footer>
+
+		<!-- Current page: /blog/ssa/ -->
+	</body>
+</html>

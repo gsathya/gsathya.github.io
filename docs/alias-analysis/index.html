@@ -1,0 +1,67 @@
+<div class="message-box">
+	<p><em>This post was originally published as a comment on the r/reactjs subreddit.</em></p>
+</div>
+<p>As the other comment mentions, we support almost all of the JavaScript language including all of it's idiosyncrasies. Forget is backwards compatible, so we have to work with existing code and not introduce new constraints -- this makes it a lot harder.</p>
+<p>One concrete example that looks simple enough but is actually really tricky to get right is aliasing, consider this example:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> a<span class="token punctuation">,</span> b <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> x <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+	x<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Foo x<span class="token operator">=</span><span class="token punctuation">{</span>x<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>This seems simple enough to memoize with a compiler, the output should be something like this:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> a<span class="token punctuation">,</span> b <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> x <span class="token operator">=</span> <span class="token function">useMemo</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+		<span class="token keyword">const</span> x <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+		x<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token keyword">return</span> x<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Foo x<span class="token operator">=</span><span class="token punctuation">{</span>x<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>The entire computation of x is wrapped in a useMemo and cached. Simple enough.</p>
+<p>What happens if you alias x to some other variable?</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> a<span class="token punctuation">,</span> b <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> x <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+	x<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">const</span> y <span class="token operator">=</span> x<span class="token punctuation">;</span>
+	y<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Foo x<span class="token operator">=</span><span class="token punctuation">{</span>x<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Now, it's longer enough to simply memoize the computation of x separately like we did previously:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// incorrect</span>
+<span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> a<span class="token punctuation">,</span> b <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> x <span class="token operator">=</span> <span class="token function">useMemo</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+		<span class="token keyword">const</span> x <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+		x<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token keyword">return</span> x<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">const</span> y <span class="token operator">=</span> <span class="token function">useMemo</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+		<span class="token keyword">const</span> y <span class="token operator">=</span> x<span class="token punctuation">;</span>
+		y<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token keyword">return</span> y<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>x<span class="token punctuation">,</span> b<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Foo x<span class="token operator">=</span><span class="token punctuation">{</span>x<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>The correct way to memoize this is to group the computation together:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> a<span class="token punctuation">,</span> b <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> x <span class="token operator">=</span> <span class="token function">useMemo</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+		<span class="token keyword">const</span> x <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+		x<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+		<span class="token keyword">const</span> y <span class="token operator">=</span> x<span class="token punctuation">;</span>
+		y<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token keyword">return</span> y<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>a<span class="token punctuation">,</span> b<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Foo x<span class="token operator">=</span><span class="token punctuation">{</span>x<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>This is already bit trickier than without aliasing, but this is still just straight line code. Imagine if we had control flow in between, or if this escapes to an object or some random function call? It gets much trickier. Forget can't simply bail out and refuse to compile this case as we want to be backwards compatible.</p>
+<p><a href="https://en.wikipedia.org/wiki/Alias_analysis">Alias analysis</a> on it's own is a huge topic in compiler analysis. There's several other bits of compiler analysis like this in Forget to make it work with vanilla JavaScript.</p>
+<p>Hopefully that provides some more clarity on why building Forget is taking
+longer than you'd think and it's most definitely more compex than a run of the
+mill Babel transform.</p>

@@ -14,7 +14,7 @@ description: "The post describes how the React Compiler uses SSA form for fine g
 The React compiler implements numerous traditional compiler transformations, that are generally not accessible without having some background in compiler theory. In this post, I'll explain a compiler pass called Static Single Assignment form (SSA) using a motivating example.
 
 <div class="message-box">
-	<p>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background.</p>
+	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background.</em></p>
 </div>
 
 Consider this simple React component:
@@ -51,7 +51,7 @@ function Component(props) {
 The compiler can easily track the `styles` object being created and passed down as props.
 
 <div class="message-box">
-	<p>Don't worry too much about the useMemoCache hook, it's an internal API used by the compiler to cache values. Think of `$` as an array.</p>
+	<p><em>Don't worry too much about the useMemoCache hook, it's an internal API used by the compiler to cache values. Think of `$` as an array.</em></p>
 </div>
 
 Now, let's say you want to refactor the styles based on a condition.
@@ -174,7 +174,7 @@ We can't modify a value after it's memoized. Not because it's sub-optimal perfor
 We need a way to track the values as they _flow_, not just simply memoize it in the scope they are created.
 
 <div class="message-box">
- <p>One could argue that you shouldn't be writing code like this. But, local mutations are very natural in JavaScript and there's plenty of React code written like this that we need to compile efficiently.</p>
+ <p><em>One could argue that you shouldn't be writing code like this. But, local mutations are very natural in JavaScript and there's plenty of React code written like this that we need to compile efficiently.</em></p>
 </div>
 
 ### Track the flow

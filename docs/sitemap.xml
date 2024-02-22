@@ -22,16 +22,6 @@
 	</url>
 	
 	<url>
-		<loc>https://www.recompiled.dev/tags/ecmascript/</loc>
-		<lastmod>2023-07-28</lastmod>
-	</url>
-	
-	<url>
-		<loc>https://www.recompiled.dev/tags/intl/</loc>
-		<lastmod>2023-07-28</lastmod>
-	</url>
-	
-	<url>
 		<loc>https://www.recompiled.dev/tags/forget/</loc>
 		<lastmod>2023-07-28</lastmod>
 	</url>
@@ -43,6 +33,16 @@
 	
 	<url>
 		<loc>https://www.recompiled.dev/tags/compiler/</loc>
+		<lastmod>2023-07-28</lastmod>
+	</url>
+	
+	<url>
+		<loc>https://www.recompiled.dev/tags/ecmascript/</loc>
+		<lastmod>2023-07-28</lastmod>
+	</url>
+	
+	<url>
+		<loc>https://www.recompiled.dev/tags/intl/</loc>
 		<lastmod>2023-07-28</lastmod>
 	</url>
 	
@@ -72,7 +72,12 @@
 	</url>
 	
 	<url>
-		<loc>https://www.recompiled.dev/blog/ssa-react-compiler/</loc>
+		<loc>https://www.recompiled.dev/blog/alias-analysis/</loc>
+		<lastmod>2024-01-22</lastmod>
+	</url>
+	
+	<url>
+		<loc>https://www.recompiled.dev/blog/ssa/</loc>
 		<lastmod>2024-02-22</lastmod>
 	</url>
 </urlset>
