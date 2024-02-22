@@ -11,8 +11,6 @@ description: "The post describes how the React Compiler uses SSA form for fine g
 
 {%- css %}{% include "public/css/message-box.css" %}{% endcss %}
 
-# Compiler theory and Reactivity
-
 The React compiler implements numerous traditional compiler transformations, that are generally not accessible without having some background in compiler theory. In this post, I'll explain a compiler pass called Static Single Assignment form (SSA) using a motivating example.
 
 <div class="message-box">
@@ -70,7 +68,7 @@ function Component({ colours, hover, hoverColours }) {
 }
 ```
 
-Memoizing the styles object becomes a bit more challenging for the compiler because it's no longer a single statement. It's spread across several statements, and there's control flow involved -- styles is created in both the if and else block.
+Memoizing the styles object becomes a bit more challenging for the compiler because it's no longer a single statement. It's spread across several statements, and there's control flow involved -- styles is created in both the `if` and `else` block.
 
 The compiler can still track styles creation across both blocks and memoize it like this:
 
@@ -110,9 +108,9 @@ Consider our previously example, but slightly modified to track the value separa
 ```js
   let styles;
   if (!hover) {
-    t0 = { colours };              <-- separate value
+    t0 = { colours }; //              <-- separate value
   } else {
-    t1 = { colours: hoverColours}; <-- separate value
+    t1 = { colours: hoverColours}; // <-- separate value
   }
   styles = choose(t0 or t1);
 ```
@@ -156,18 +154,20 @@ Well, let's consider another example:
 
 ```js
 function Component({ colours, hover, hoverColours }) {
-  let styles;
-  if (!hover) {
-    styles = { colours };
-  } else {
-    styles = { colours: hoverColours};
-  }
-  styles.height = 'large'; <-- modifying styles object
-  return <Item styles={styles}></Item>;
+	let styles;
+	if (!hover) {
+		styles = { colours };
+	} else {
+		styles = { colours: hoverColours };
+	}
+	styles.height = "large"; // <-- modifying styles object
+	return <Item styles={styles}></Item>;
 }
 ```
 
-In the above example, we modify the styles object after the if-else block. It's no longer safe to memoize the values inside the if-block and else-block separately.
+In the above example, we modify the styles object after the `if-else` block by
+adding a new property named `height`. It's no longer safe to memoize the values
+inside the `if`-block and `else`-block separately.
 
 We can't modify a value after it's memoized. Not because it's sub-optimal performance-wise, but because it leads to incorrect behavior during re-rendering. Take a minute to think about how this behavior can manifest in practice.
 
@@ -179,7 +179,7 @@ We need a way to track the values as they _flow_, not just simply memoize it in 
 
 ### Track the flow
 
-Remember the "choose" function, we ignored earlier? This lets the compiler track the values as they flow across if-else block!
+Remember the "`choose`" function, we ignored earlier? This lets the compiler track the values as they flow across if-else block!
 
 ```js
   if (hover) {
@@ -187,11 +187,11 @@ Remember the "choose" function, we ignored earlier? This lets the compiler track
   } else {
     t1 = { colours: hoverColours};
   }
-  styles = choose(t0 or t1)
-  styles.height = 'large'; // <-- modifying styles
+  styles = choose(t0 or t1); // <-- tracks values after control flow
+  styles.height = 'large';
 ```
 
-Now, the code (or to be precise, the compiler's intermediate representation) tells the compiler that styles is either t0 or t1 and modifying styles is equivalent to modifying the values t0 and t1.
+Now, the code (or to be precise, the compiler's [intermediate representation](https://en.wikipedia.org/wiki/Intermediate_representation)) tells the compiler that `styles` is either `t0` or `t1` and modifying `styles` is equivalent to modifying the values `t0` and `t1`.
 
 The compiler can now infer that the `styles` can only be memoized at a coarser level like this:
 
@@ -217,11 +217,13 @@ if ($[0] !== hover || $[1] !== colours || $[2] !== hoverColours) {
 }
 ```
 
+This code is now correct!
+
 ### Compiler theory
 
 To recap, we've talked about tracking values separately with temporary identifiers and tracking the flow of values across control flow with a "choose" function.
 
-Interestingly, a classical compiler transformation called [Static single-assignment form](https://en.wikipedia.org/wiki/Static_single-assignment_form) (SSA) does exactly this! Tracking new values and re-assignments by creating a new temporary values is the core part of the SSA transform. The "choose" function we talked about earlier is simply the "phi" (Φ) function defined in the SSA form.
+Interestingly, a classical compiler transformation called [Static single-assignment form](https://en.wikipedia.org/wiki/Static_single-assignment_form) (SSA) does exactly this! Tracking new values and re-assignments by creating a new temporary value is the core part of the SSA transform. The "_choose_" function we talked about earlier is simply the "_phi_" (Φ) function defined in the SSA form.
 
 The exact SSA transformation that the React compiler uses is from the excellent [Simple and Efficient Construction of Static Single
 Assignment Form](https://c9x.me/compile/bib/braun13cc.pdf) paper.
