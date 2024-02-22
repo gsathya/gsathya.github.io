@@ -165,7 +165,7 @@ function Component({ colours, hover, hoverColours }) {
 }
 ```
 
-In the above example, we modify the styles object after the `if-else` block by
+In the above example, we modify the `styles` object after the `if-else` block by
 adding a new property named `height`. It's no longer safe to memoize the values
 inside the `if`-block and `else`-block separately.
 
