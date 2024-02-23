@@ -70,7 +70,7 @@ function Component({ colours, hover, hoverColours }) {
 }
 ```
 
-Memoizing the styles object becomes a bit more challenging for the compiler because it's no longer a single statement. It's spread across several statements, and there's control flow involved -- styles is created in both the `if` and `else` block.
+Memoizing the ` styles` object becomes a bit more challenging for the compiler because it's no longer a single statement. It's spread across several statements, and there's control flow involved -- styles is created in both the `if`and`else` block.
 
 The compiler can still track styles creation across both blocks and memoize it like this:
 
@@ -117,7 +117,7 @@ if (!hover) {
 styles = choose(t0 or t1);
 ```
 
-Now, it's pretty clear that we can memoize `temp1` and `temp2` separately. You've also realized that we need to choose between `t0` and `t1` and assign it correctly to `styles`, but let's ignore that for now.
+Now, it's pretty clear that we can memoize `t0` and `t1` separately. You've also realized that we need to choose between `t0` and `t1` and assign it correctly to `styles`, but let's ignore that for now.
 
 The compiler can memoize the values in their respective blocks:
 
@@ -199,7 +199,7 @@ The compiler can now infer that the `styles` can only be memoized at a coarser l
 
 ```js
 if ($[0] !== hover || $[1] !== colours || $[2] !== hoverColours) {
-	if (hover) {
+	if (!hover) {
 		styles = {
 			colours,
 		};
