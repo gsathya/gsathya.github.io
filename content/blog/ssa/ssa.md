@@ -13,7 +13,7 @@ description: "The post describes how the React Compiler uses SSA form for fine g
 
 The React compiler implements numerous traditional compiler transformations,
 that are generally not accessible without having some background in compiler
-theory. In this post, I'll try to provide a more accessible explaination of a compiler pass called Static Single
+theory. In this post, I'll try to provide a more accessible explanation of a compiler pass called Static Single
 Assignment form (SSA) using examples.
 
 <div class="message-box">
