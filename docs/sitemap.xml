@@ -17,16 +17,6 @@
 	</url>
 	
 	<url>
-		<loc>https://www.recompiled.dev/tags/ecmascript/</loc>
-		<lastmod>2023-07-28</lastmod>
-	</url>
-	
-	<url>
-		<loc>https://www.recompiled.dev/tags/intl/</loc>
-		<lastmod>2023-07-28</lastmod>
-	</url>
-	
-	<url>
 		<loc>https://www.recompiled.dev/tags/forget/</loc>
 		<lastmod>2023-07-28</lastmod>
 	</url>
@@ -43,6 +33,16 @@
 	
 	<url>
 		<loc>https://www.recompiled.dev/tags/v8/</loc>
+		<lastmod>2023-07-28</lastmod>
+	</url>
+	
+	<url>
+		<loc>https://www.recompiled.dev/tags/ecmascript/</loc>
+		<lastmod>2023-07-28</lastmod>
+	</url>
+	
+	<url>
+		<loc>https://www.recompiled.dev/tags/intl/</loc>
 		<lastmod>2023-07-28</lastmod>
 	</url>
 	

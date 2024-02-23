@@ -1,6 +1,6 @@
 {%- css %}.postlist { counter-reset: start-from {{ talks.length + 1 }} }{% endcss %}
 <ul reversed class="postlist">
-{% for talk in talks | reverse %}
+{% for talk in talks %}
 	<li class="postlist-item{% if talk.url == url %} postlist-item-active{% endif %}">
 		<a href="{{ talk.url }}" class="postlist-link">{{ talk.title }}</a>
 		<time class="postlist-date" datetime="{{ talk.date | makeDateObject | htmlDateString }}">{{ talk.date | makeDateObject | readableDate("LLLL yyyy") }}</time>
