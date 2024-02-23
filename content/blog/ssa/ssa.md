@@ -51,7 +51,7 @@ function Component(props) {
 }
 ```
 
-The compiler can easily track the `styles` object being created and passed down as props.
+The compiler can track the `styles` object being created and passed down as props.
 
 <div class="message-box">
 	<p><em>Don't worry too much about the useMemoCache hook, it's an internal API used by the compiler to cache values. Think of `$` as an array.</em></p>
@@ -73,7 +73,10 @@ function Component({ colours, hover, hoverColours }) {
 }
 ```
 
-Memoizing the ` styles` object becomes a bit more challenging for the compiler because it's no longer a single statement. It's spread across several statements, and there's control flow involved -- styles is created in both the `if`and`else` block.
+Memoizing the ` styles` object becomes a bit more challenging for the compiler
+because it's no longer a single statement. It's spread across several
+statements, and there's control flow involved -- styles is created in both the
+`if` and `else` block.
 
 The compiler can still track styles creation across both blocks and memoize it like this:
 
@@ -224,7 +227,7 @@ if ($[0] !== hover || $[1] !== colours || $[2] !== hoverColours) {
 
 ### Compiler theory
 
-To recap, we've talked about tracking values separately with temporary identifiers and tracking the flow of values across control flow with a "choose" function.
+To recap, we've talked about tracking values separately with temporary identifiers and tracking the values across control flow with a "choose" function.
 
 Interestingly, a classical compiler transformation called [Static single-assignment form](https://en.wikipedia.org/wiki/Static_single-assignment_form) (SSA) does exactly this! Tracking new values and re-assignments by creating a new temporary value is the core part of the SSA transform. The "_choose_" function we talked about earlier is simply the "_phi_" (Φ) function defined in the SSA form.
 

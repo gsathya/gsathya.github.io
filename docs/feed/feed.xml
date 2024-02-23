@@ -46,7 +46,7 @@ Assignment form (SSA) using examples.&lt;/p&gt;
 	&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; styles &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; t0&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 	&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Item styles&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;styles&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The compiler can easily track the &lt;code&gt;styles&lt;/code&gt; object being created and passed down as props.&lt;/p&gt;
+&lt;p&gt;The compiler can track the &lt;code&gt;styles&lt;/code&gt; object being created and passed down as props.&lt;/p&gt;
 &lt;div class=&quot;message-box&quot;&gt;
 	&lt;p&gt;&lt;em&gt;Don&#39;t worry too much about the useMemoCache hook, it&#39;s an internal API used by the compiler to cache values. Think of `$` as an array.&lt;/em&gt;&lt;/p&gt;
   &lt;p&gt;&lt;em&gt;The React Compiler can memoize JSX too, but I&#39;m leaving it out in this post for brevity.&lt;/em&gt;&lt;/p&gt;
@@ -61,7 +61,10 @@ Assignment form (SSA) using examples.&lt;/p&gt;
 	&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
 	&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Item styles&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;styles&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;Item&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Memoizing the &lt;code&gt; styles&lt;/code&gt; object becomes a bit more challenging for the compiler because it&#39;s no longer a single statement. It&#39;s spread across several statements, and there&#39;s control flow involved -- styles is created in both the &lt;code&gt;if&lt;/code&gt;and&lt;code&gt;else&lt;/code&gt; block.&lt;/p&gt;
+&lt;p&gt;Memoizing the &lt;code&gt; styles&lt;/code&gt; object becomes a bit more challenging for the compiler
+because it&#39;s no longer a single statement. It&#39;s spread across several
+statements, and there&#39;s control flow involved -- styles is created in both the
+&lt;code&gt;if&lt;/code&gt; and &lt;code&gt;else&lt;/code&gt; block.&lt;/p&gt;
 &lt;p&gt;The compiler can still track styles creation across both blocks and memoize it like this:&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Component&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;props&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
 	&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; $ &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;useMemoCache&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
@@ -173,7 +176,7 @@ styles&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;height &lt;s
 	styles &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;h3 id=&quot;compiler-theory&quot; tabindex=&quot;-1&quot;&gt;Compiler theory &lt;a class=&quot;header-anchor&quot; href=&quot;https://www.recompiled.dev/blog/ssa/&quot;&gt;#&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;To recap, we&#39;ve talked about tracking values separately with temporary identifiers and tracking the flow of values across control flow with a &amp;quot;choose&amp;quot; function.&lt;/p&gt;
+&lt;p&gt;To recap, we&#39;ve talked about tracking values separately with temporary identifiers and tracking the values across control flow with a &amp;quot;choose&amp;quot; function.&lt;/p&gt;
 &lt;p&gt;Interestingly, a classical compiler transformation called &lt;a href=&quot;https://en.wikipedia.org/wiki/Static_single-assignment_form&quot;&gt;Static single-assignment form&lt;/a&gt; (SSA) does exactly this! Tracking new values and re-assignments by creating a new temporary value is the core part of the SSA transform. The &amp;quot;&lt;em&gt;choose&lt;/em&gt;&amp;quot; function we talked about earlier is simply the &amp;quot;&lt;em&gt;phi&lt;/em&gt;&amp;quot; (Φ) function defined in the SSA form.&lt;/p&gt;
 &lt;p&gt;The exact SSA transformation that the React compiler uses is from the excellent &lt;a href=&quot;https://c9x.me/compile/bib/braun13cc.pdf&quot;&gt;Simple and Efficient Construction of Static Single
 Assignment Form&lt;/a&gt; paper.&lt;/p&gt;

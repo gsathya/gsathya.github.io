@@ -552,7 +552,7 @@ Assignment form (SSA) using examples.</p>
 	<span class="token keyword">const</span> styles <span class="token operator">=</span> t0<span class="token punctuation">;</span>
 	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p>The compiler can easily track the <code>styles</code> object being created and passed down as props.</p>
+<p>The compiler can track the <code>styles</code> object being created and passed down as props.</p>
 <div class="message-box">
 	<p><em>Don't worry too much about the useMemoCache hook, it's an internal API used by the compiler to cache values. Think of `$` as an array.</em></p>
   <p><em>The React Compiler can memoize JSX too, but I'm leaving it out in this post for brevity.</em></p>
@@ -567,7 +567,10 @@ Assignment form (SSA) using examples.</p>
 	<span class="token punctuation">}</span>
 	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>Item<span class="token operator">></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p>Memoizing the <code> styles</code> object becomes a bit more challenging for the compiler because it's no longer a single statement. It's spread across several statements, and there's control flow involved -- styles is created in both the <code>if</code>and<code>else</code> block.</p>
+<p>Memoizing the <code> styles</code> object becomes a bit more challenging for the compiler
+because it's no longer a single statement. It's spread across several
+statements, and there's control flow involved -- styles is created in both the
+<code>if</code> and <code>else</code> block.</p>
 <p>The compiler can still track styles creation across both blocks and memoize it like this:</p>
 <pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter">props</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 	<span class="token keyword">const</span> $ <span class="token operator">=</span> <span class="token function">useMemoCache</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -679,7 +682,7 @@ styles<span class="token punctuation">.</span>height <span class="token operator
 	styles <span class="token operator">=</span> $<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
 <h3 id="compiler-theory" tabindex="-1">Compiler theory <a class="header-anchor" href="#compiler-theory">#</a></h3>
-<p>To recap, we've talked about tracking values separately with temporary identifiers and tracking the flow of values across control flow with a &quot;choose&quot; function.</p>
+<p>To recap, we've talked about tracking values separately with temporary identifiers and tracking the values across control flow with a &quot;choose&quot; function.</p>
 <p>Interestingly, a classical compiler transformation called <a href="https://en.wikipedia.org/wiki/Static_single-assignment_form">Static single-assignment form</a> (SSA) does exactly this! Tracking new values and re-assignments by creating a new temporary value is the core part of the SSA transform. The &quot;<em>choose</em>&quot; function we talked about earlier is simply the &quot;<em>phi</em>&quot; (Φ) function defined in the SSA form.</p>
 <p>The exact SSA transformation that the React compiler uses is from the excellent <a href="https://c9x.me/compile/bib/braun13cc.pdf">Simple and Efficient Construction of Static Single
 Assignment Form</a> paper.</p>
