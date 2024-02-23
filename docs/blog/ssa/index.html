@@ -532,7 +532,7 @@ Assignment form (SSA) using examples.</p>
 <p>Consider this simple React component:</p>
 <pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> colours <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 	<span class="token keyword">let</span> styles <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span>
-	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>Item<span class="token operator">></span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
 <p>We can easily memoize it like this:</p>
 <pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter">props</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -565,7 +565,7 @@ Assignment form (SSA) using examples.</p>
 	<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
 		styles <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">colours</span><span class="token operator">:</span> hoverColours <span class="token punctuation">}</span><span class="token punctuation">;</span>
 	<span class="token punctuation">}</span>
-	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>Item<span class="token operator">></span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
 <p>Memoizing the <code> styles</code> object becomes a bit more challenging for the compiler
 because it's no longer a single statement. It's spread across several
@@ -641,7 +641,7 @@ styles <span class="token operator">=</span> <span class="token function">choose
 		styles <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">colours</span><span class="token operator">:</span> hoverColours <span class="token punctuation">}</span><span class="token punctuation">;</span>
 	<span class="token punctuation">}</span>
 	styles<span class="token punctuation">.</span>height <span class="token operator">=</span> <span class="token string">"large"</span><span class="token punctuation">;</span> <span class="token comment">// &lt;-- modifying styles object</span>
-	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>Item<span class="token operator">></span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Item styles<span class="token operator">=</span><span class="token punctuation">{</span>styles<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
 <p>In the above example, we modify the <code>styles</code> object after the <code>if-else</code> block by
 adding a new property named <code>height</code>. It's no longer safe to memoize the values

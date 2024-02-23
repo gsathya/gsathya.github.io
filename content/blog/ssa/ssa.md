@@ -25,7 +25,7 @@ Consider this simple React component:
 ```js
 function Component({ colours }) {
 	let styles = { colours };
-	return <Item styles={styles}></Item>;
+	return <Item styles={styles} />;
 }
 ```
 
@@ -69,7 +69,7 @@ function Component({ colours, hover, hoverColours }) {
 	} else {
 		styles = { colours: hoverColours };
 	}
-	return <Item styles={styles}></Item>;
+	return <Item styles={styles} />;
 }
 ```
 
@@ -169,7 +169,7 @@ function Component({ colours, hover, hoverColours }) {
 		styles = { colours: hoverColours };
 	}
 	styles.height = "large"; // <-- modifying styles object
-	return <Item styles={styles}></Item>;
+	return <Item styles={styles} />;
 }
 ```
 
