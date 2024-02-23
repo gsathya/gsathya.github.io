@@ -22,6 +22,11 @@
 	</url>
 	
 	<url>
+		<loc>https://www.recompiled.dev/tags/v8/</loc>
+		<lastmod>2023-09-19</lastmod>
+	</url>
+	
+	<url>
 		<loc>https://www.recompiled.dev/tags/forget/</loc>
 		<lastmod>2023-09-19</lastmod>
 	</url>
@@ -33,11 +38,6 @@
 	
 	<url>
 		<loc>https://www.recompiled.dev/tags/compiler/</loc>
-		<lastmod>2023-09-19</lastmod>
-	</url>
-	
-	<url>
-		<loc>https://www.recompiled.dev/tags/v8/</loc>
 		<lastmod>2023-09-19</lastmod>
 	</url>
 	
