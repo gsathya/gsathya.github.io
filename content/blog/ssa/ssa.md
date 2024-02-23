@@ -11,7 +11,10 @@ description: "The post describes how the React Compiler uses SSA form for fine g
 
 {%- css %}{% include "public/css/message-box.css" %}{% endcss %}
 
-The React compiler implements numerous traditional compiler transformations, that are generally not accessible without having some background in compiler theory. In this post, I'll explain a compiler pass called Static Single Assignment form (SSA) using a motivating example.
+The React compiler implements numerous traditional compiler transformations,
+that are generally not accessible without having some background in compiler
+theory. In this post, I'll try to provide a more accessible explaination of a compiler pass called Static Single
+Assignment form (SSA) using a motivating example.
 
 <div class="message-box">
 	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background.</em></p>
