@@ -187,7 +187,7 @@ We need a way to track the values as they _flow_, not just simply memoize it in 
 Remember the "`choose`" function, we ignored earlier? This lets the compiler track the values as they flow across if-else block!
 
 ```js
-if (hover) {
+if (!hover) {
   t0 = { colours };
 } else {
   t1 = { colours: hoverColours};

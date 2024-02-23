@@ -650,7 +650,7 @@ inside the <code>if</code>-block and <code>else</code>-block separately.</p>
 </div>
 <h3 id="track-the-flow" tabindex="-1">Track the flow <a class="header-anchor" href="#track-the-flow">#</a></h3>
 <p>Remember the &quot;<code>choose</code>&quot; function, we ignored earlier? This lets the compiler track the values as they flow across if-else block!</p>
-<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">if</span> <span class="token punctuation">(</span>hover<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>hover<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   t0 <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
   t1 <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">colours</span><span class="token operator">:</span> hoverColours<span class="token punctuation">}</span><span class="token punctuation">;</span>
