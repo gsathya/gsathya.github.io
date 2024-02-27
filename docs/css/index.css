@@ -213,6 +213,11 @@ header {
 .postlist-item-active .postlist-link {
 	font-weight: bold;
 }
+.postlist-event {
+	font-size: 0.8125em; /* 13px /16 */
+	color: var(--color-gray-90);
+	word-spacing: -0.5px;
+}
 
 /* Tags */
 .post-tag {
