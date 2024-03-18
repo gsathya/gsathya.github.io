@@ -562,7 +562,7 @@ span#name:hover:after {
 
 	<span class="token keyword">return</span> <span class="token operator">&lt;</span>Foo x<span class="token operator">=</span><span class="token punctuation">{</span>x<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p>Now, it's longer enough to simply memoize the computation of x separately like we did previously:</p>
+<p>Now, it's no longer enough to simply memoize the computation of x separately like we did previously:</p>
 <pre class="language-js" tabindex="0"><code class="language-js"><span class="token comment">// incorrect</span>
 <span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> a<span class="token punctuation">,</span> b <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 	<span class="token keyword">const</span> x <span class="token operator">=</span> <span class="token function">useMemo</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>

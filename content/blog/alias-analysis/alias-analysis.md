@@ -62,7 +62,7 @@ function Component({ a, b }) {
 }
 ```
 
-Now, it's longer enough to simply memoize the computation of x separately like we did previously:
+Now, it's no longer enough to simply memoize the computation of x separately like we did previously:
 
 ```js
 // incorrect
