@@ -3,11 +3,7 @@
 {% for talk in talks %}
 	<li class="postlist-item">
 		<a href="{{ talk.url }}" class="postlist-link">{{ talk.title }}</a>
-		{% if talk.event.url !== undefined %}
-			<a href="{{ talk.event.url }}" class="postlist-event">{{ talk.event.name }}</a>
-		{% else %}
-			<div class="postlist-event">{{ talk.event.name }}</div>
-		{% endif %}
+		<div class="postlist-event">{{ talk.event.name }}</div>
 	</li>
 {% endfor %}
 </ul>
