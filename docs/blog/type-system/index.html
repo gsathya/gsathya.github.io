@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Type system of the React compiler</title>
-		<meta name="description" content="The post describes how the type system of th React compiler is implemented and used">
+		<meta name="description" content="The post describes how the type system of the React compiler is implemented and used">
 		<link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Recompiled">
 		<link rel="alternate" href="/feed/feed.json" type="application/json" title="Recompiled">
 		<meta name="generator" content="Eleventy v2.0.1">
@@ -487,7 +487,7 @@ span#name:hover:after {
 
 		<meta name="twitter:site" content="@_gsathya">
 		<meta name="twitter:title" content="Type system of the React compiler">
-		<meta name="twitter:description" content="The post describes how the type system of th React compiler is implemented and used">
+		<meta name="twitter:description" content="The post describes how the type system of the React compiler is implemented and used">
 
 	</head>
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-HNCTVD2H2Q"></script>
@@ -622,6 +622,29 @@ trading more explicit type annotations for better errors.</p>
 <div class="message-box">
 	<p><em> We could've made the compiler use the type information from Typescript or Flow, but we wanted to make sure it worked well for untyped JavaScript too. We do plan to add support for these type systems in the future for more optimal memoization.</em></p>
 </div>
+<h2 id="don-t-memo-the-props" tabindex="-1">(Don't) Memo the props <a class="header-anchor" href="#don-t-memo-the-props">#</a></h2>
+<p>Now, going back to our original example of the <code>Price</code> component, the compiler can
+infer that all the values are primitives and there's actually no need to memoize
+<code>total</code>, <code>subTotal</code> or <code>tax</code> in this <code>Price</code> component, saving bundle size and
+memory!</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Price</span><span class="token punctuation">(</span><span class="token parameter">t0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> $ <span class="token operator">=</span> <span class="token function">useMemoCache</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> items<span class="token punctuation">,</span> state <span class="token punctuation">}</span> <span class="token operator">=</span> t0<span class="token punctuation">;</span>
+  <span class="token keyword">const</span> subTotal <span class="token operator">=</span> <span class="token function">calculateSubTotal</span><span class="token punctuation">(</span>items<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> tax <span class="token operator">=</span> <span class="token function">calculateTax</span><span class="token punctuation">(</span>subTotal<span class="token punctuation">,</span> state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> total <span class="token operator">=</span> subTotal <span class="token operator">+</span> tax<span class="token punctuation">;</span>
+  <span class="token keyword">let</span> t1<span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>$<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">!==</span> total<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    t1 <span class="token operator">=</span> <span class="token operator">&lt;</span>Text text<span class="token operator">=</span><span class="token punctuation">{</span>total<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
+    $<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> total<span class="token punctuation">;</span>
+    $<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> t1<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    t1 <span class="token operator">=</span> $<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> t1<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
 <h2 id="typing-react" tabindex="-1">Typing React <a class="header-anchor" href="#typing-react">#</a></h2>
 <p>Once we had the type system, it quickly became clear that we could use it as a platform to do various other analysis too.</p>
 <p>Adding validations for certain rules of react became as easy as adding a few typing rules to our type system. For example, rather than building separate validations for each React API, just adding the typing rules for <code>useState</code> hook gives us this validation:</p>
@@ -636,6 +659,8 @@ trading more explicit type annotations for better errors.</p>
 <p>If you're curious to learn more about type systems, the original Hindley Milner
 type system papers and the more recent <a href="https://arxiv.org/abs/1306.6032">Local Type
 Inference</a> paper are great places to start.</p>
+<p>If you're curious to read more about compiler theory in the React compiler, take
+a look at the <a href="/tags/forget/">other tagged posts</a>.</p>
 
 <ul class="links-nextprev"><li>Previous: <a href="/blog/ssa/">Compiler Theory and Reactivity</a></li>
 </ul>

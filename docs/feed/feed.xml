@@ -111,6 +111,29 @@ trading more explicit type annotations for better errors.&lt;/p&gt;
 &lt;div class=&quot;message-box&quot;&gt;
 	&lt;p&gt;&lt;em&gt; We could&#39;ve made the compiler use the type information from Typescript or Flow, but we wanted to make sure it worked well for untyped JavaScript too. We do plan to add support for these type systems in the future for more optimal memoization.&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
+&lt;h2 id=&quot;don-t-memo-the-props&quot; tabindex=&quot;-1&quot;&gt;(Don&#39;t) Memo the props &lt;a class=&quot;header-anchor&quot; href=&quot;https://www.recompiled.dev/blog/type-system/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Now, going back to our original example of the &lt;code&gt;Price&lt;/code&gt; component, the compiler can
+infer that all the values are primitives and there&#39;s actually no need to memoize
+&lt;code&gt;total&lt;/code&gt;, &lt;code&gt;subTotal&lt;/code&gt; or &lt;code&gt;tax&lt;/code&gt; in this &lt;code&gt;Price&lt;/code&gt; component, saving bundle size and
+memory!&lt;/p&gt;
+&lt;pre class=&quot;language-js&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Price&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;t0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; $ &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;useMemoCache&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; items&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; state &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; t0&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; subTotal &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;calculateSubTotal&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;items&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; tax &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;calculateTax&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;subTotal&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; state&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; total &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; subTotal &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; tax&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; t1&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;$&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;!==&lt;/span&gt; total&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    t1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;Text text&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;total&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    $&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; total&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    $&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; t1&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    t1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; t1&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&quot;typing-react&quot; tabindex=&quot;-1&quot;&gt;Typing React &lt;a class=&quot;header-anchor&quot; href=&quot;https://www.recompiled.dev/blog/type-system/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Once we had the type system, it quickly became clear that we could use it as a platform to do various other analysis too.&lt;/p&gt;
 &lt;p&gt;Adding validations for certain rules of react became as easy as adding a few typing rules to our type system. For example, rather than building separate validations for each React API, just adding the typing rules for &lt;code&gt;useState&lt;/code&gt; hook gives us this validation:&lt;/p&gt;
@@ -125,6 +148,8 @@ trading more explicit type annotations for better errors.&lt;/p&gt;
 &lt;p&gt;If you&#39;re curious to learn more about type systems, the original Hindley Milner
 type system papers and the more recent &lt;a href=&quot;https://arxiv.org/abs/1306.6032&quot;&gt;Local Type
 Inference&lt;/a&gt; paper are great places to start.&lt;/p&gt;
+&lt;p&gt;If you&#39;re curious to read more about compiler theory in the React compiler, take
+a look at the &lt;a href=&quot;https://www.recompiled.dev/tags/forget/&quot;&gt;other tagged posts&lt;/a&gt;.&lt;/p&gt;
 </content>
 	</entry>
 	

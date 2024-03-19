@@ -6,7 +6,7 @@ tags:
   - Forget
   - React
   - Compiler
-description: "The post describes how the type system of th React compiler is implemented and used"
+description: "The post describes how the type system of the React compiler is implemented and used"
 ---
 
 {%- css %}{% include "public/css/message-box.css" %}{% endcss %}
@@ -168,6 +168,34 @@ trading more explicit type annotations for better errors.
 	<p><em> We could've made the compiler use the type information from Typescript or Flow, but we wanted to make sure it worked well for untyped JavaScript too. We do plan to add support for these type systems in the future for more optimal memoization.</em></p>
 </div>
 
+## (Don't) Memo the props
+
+Now, going back to our original example of the `Price` component, the compiler can
+infer that all the values are primitives and there's actually no need to memoize
+`total`, `subTotal` or `tax` in this `Price` component, saving bundle size and
+memory!
+
+```js
+function Price(t0) {
+  const $ = useMemoCache(2);
+  const { items, state } = t0;
+  const subTotal = calculateSubTotal(items);
+  const tax = calculateTax(subTotal, state);
+  const total = subTotal + tax;
+  let t1;
+
+  if ($[0] !== total) {
+    t1 = <Text text={total} />;
+    $[0] = total;
+    $[1] = t1;
+  } else {
+    t1 = $[1];
+  }
+
+  return t1;
+}
+```
+
 ## Typing React
 
 Once we had the type system, it quickly became clear that we could use it as a platform to do various other analysis too.
@@ -190,3 +218,6 @@ Note how even interior mutability is caught here -- not just simply a modificati
 If you're curious to learn more about type systems, the original Hindley Milner
 type system papers and the more recent [Local Type
 Inference](https://arxiv.org/abs/1306.6032) paper are great places to start.
+
+If you're curious to read more about compiler theory in the React compiler, take
+a look at the [other tagged posts](/tags/forget/).
