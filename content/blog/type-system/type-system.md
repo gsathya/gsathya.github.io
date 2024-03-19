@@ -74,8 +74,8 @@ One of the most classical type systems is the [Hindley Milner type system](https
 
 During the initial lowering from JavaScript source to the compiler's intermediate representation, every identifier gets an associated `Type` variable to store the type. A `Type` variable is just like any other variable but instead of storing values, we store types in them.
 
-```js
-type Type = { kind: "type", id: number } | { kind: "Primitive" };
+```ts
+type Type = { kind: "type"; id: number } | { kind: "Primitive" };
 // { kind: "Type", id: number } represents a type variable
 // { kind: "Primitive" } represents a primitive type
 
@@ -162,7 +162,7 @@ But it does come with a significant downside -- if the inference is incorrect,
 it results in a surprising “action-at-a-distance” behaviors. This is why
 [Flow](https://flow.org/) moved to [local type
 inference](https://medium.com/flow-type/local-type-inference-for-flow-aaa65d071347),
-which trades more explicit type annotations for better errors.
+trading more explicit type annotations for better errors.
 
 <div class="message-box">
 	<p><em> We could've made the compiler use the type information from Typescript or Flow, but we wanted to make sure it worked well for untyped JavaScript too. We do plan to add support for these type systems in the future for more optimal memoization.</em></p>
