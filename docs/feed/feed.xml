@@ -17,7 +17,7 @@
 		<updated>2024-03-19T16:45:37Z</updated>
 		<id>https://www.recompiled.dev/blog/type-system/</id>
 		<content type="html">&lt;div class=&quot;message-box&quot;&gt;
-	&lt;p&gt;&lt;em&gt;If you&#39;re wondering what the React compiler is, I recommend reading our recent &lt;a href=&quot;https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler&quot;&gt;update post&lt;/a&gt; for some background. This post is for anyone curious about the compiler theory behind it. Don&#39;t feel pressured to understand everything in this post to use the compiler. &lt;/em&gt;&lt;/p&gt;
+	&lt;p&gt;&lt;em&gt;If you&#39;re wondering what the React compiler is, I recommend reading our recent &lt;a href=&quot;https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler&quot;&gt;update post&lt;/a&gt; for some background. This post is for anyone curious about the compiler theory behind it. Don&#39;t feel pressured to understand everything in this post in order to use the compiler. &lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;h2 id=&quot;memo-the-props&quot; tabindex=&quot;-1&quot;&gt;Memo the props &lt;a class=&quot;header-anchor&quot; href=&quot;https://www.recompiled.dev/blog/type-system/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;In React, a component wrapped in &lt;a href=&quot;https://react.dev/reference/react/memo&quot;&gt;React.memo&lt;/a&gt; only re-renders if its props change.&lt;/p&gt;
@@ -159,7 +159,7 @@ a look at the &lt;a href=&quot;https://www.recompiled.dev/tags/forget/&quot;&gt;
 		<updated>2024-02-22T16:45:37Z</updated>
 		<id>https://www.recompiled.dev/blog/ssa/</id>
 		<content type="html">&lt;div class=&quot;message-box&quot;&gt;
-	&lt;p&gt;&lt;em&gt;If you&#39;re wondering what the React compiler is, I recommend reading our recent &lt;a href=&quot;https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler&quot;&gt;update post&lt;/a&gt; for some background. This post is for anyone curious about the compiler theory behind it. Don&#39;t feel pressured to understand everything in this post to use the compiler. &lt;/em&gt;&lt;/p&gt;
+	&lt;p&gt;&lt;em&gt;If you&#39;re wondering what the React compiler is, I recommend reading our recent &lt;a href=&quot;https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler&quot;&gt;update post&lt;/a&gt; for some background. This post is for anyone curious about the compiler theory behind it. Don&#39;t feel pressured to understand everything in this post in order to use the compiler. &lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;The React compiler implements numerous traditional compiler transformations,
 that are generally not accessible without having some background in compiler
