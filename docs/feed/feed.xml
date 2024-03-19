@@ -16,13 +16,13 @@
 		<link href="https://www.recompiled.dev/blog/ssa/"/>
 		<updated>2024-02-22T16:45:37Z</updated>
 		<id>https://www.recompiled.dev/blog/ssa/</id>
-		<content type="html">&lt;p&gt;The React compiler implements numerous traditional compiler transformations,
+		<content type="html">&lt;div class=&quot;message-box&quot;&gt;
+	&lt;p&gt;&lt;em&gt;If you&#39;re wondering what the React compiler is, I recommend reading our recent &lt;a href=&quot;https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler&quot;&gt;update post&lt;/a&gt; for some background. You don&#39;t need to understand everything in this post to use the compiler. So, don&#39;t worry if some parts are unclear.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;The React compiler implements numerous traditional compiler transformations,
 that are generally not accessible without having some background in compiler
 theory. In this post, I&#39;ll try to provide a more accessible explanation of a compiler pass called Static Single
 Assignment form (SSA) using examples.&lt;/p&gt;
-&lt;div class=&quot;message-box&quot;&gt;
-	&lt;p&gt;&lt;em&gt;If you&#39;re wondering what the React compiler is, I recommend reading our recent &lt;a href=&quot;https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler&quot;&gt;update post&lt;/a&gt; for some background.&lt;/em&gt;&lt;/p&gt;
-&lt;/div&gt;
 &lt;p&gt;Consider this simple React component:&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Component&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; colours &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
 	&lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; styles &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt; colours &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;

@@ -527,13 +527,13 @@ span#name:hover:after {
 	<li><a href="/tags/compiler/" class="post-tag">Compiler</a></li>
 </ul>
 
+<div class="message-box">
+	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background. You don't need to understand everything in this post to use the compiler. So, don't worry if some parts are unclear.</em></p>
+</div>
 <p>The React compiler implements numerous traditional compiler transformations,
 that are generally not accessible without having some background in compiler
 theory. In this post, I'll try to provide a more accessible explanation of a compiler pass called Static Single
 Assignment form (SSA) using examples.</p>
-<div class="message-box">
-	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background.</em></p>
-</div>
 <p>Consider this simple React component:</p>
 <pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Component</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> colours <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 	<span class="token keyword">let</span> styles <span class="token operator">=</span> <span class="token punctuation">{</span> colours <span class="token punctuation">}</span><span class="token punctuation">;</span>
