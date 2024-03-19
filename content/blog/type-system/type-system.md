@@ -20,8 +20,12 @@ description: "The post describes how the type system of th React compiler is imp
 In React, a component wrapped in [React.memo](https://react.dev/reference/react/memo) only re-renders if its props change.
 
 ```js
-const Greeting = memo(function Greeting({ name }) {
-  return <h1>Hello, {name}!</h1>;
+const Greeting = memo(function Greeting({ user }) {
+  return (
+    <h1>
+      Hello, {user.firstName} {user.lastName}!
+    </h1>
+  );
 });
 ```
 
