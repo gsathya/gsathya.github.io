@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xml:base="https://recompiled.dev/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>recompiled.dev</title>
+    <link>https://recompiled.dev/</link>
+    <atom:link href="https://recompiled.dev/feed.xml" rel="self" type="application/rss+xml" />
+    <description>A blog by Sathya Gunasekaran</description>
+    <language>en</language>
+    <item>
+      <title>Type system of the React compiler</title>
+      <link>https://recompiled.dev/blog/type-system/</link>
+      <description>The post describes how the type system of the React compiler is implemented and used</description>
+      <pubDate>Tue, 19 Mar 2024 16:45:37 +0000</pubDate>
+      <dc:creator>Sathya Gunasekaran</dc:creator>
+      <guid>https://recompiled.dev/blog/type-system/</guid>
+    </item>
+    <item>
+      <title>Compiler Theory and Reactivity</title>
+      <link>https://recompiled.dev/blog/ssa/</link>
+      <description>The post describes how the React Compiler uses SSA form for fine grained reactivity</description>
+      <pubDate>Thu, 22 Feb 2024 16:45:37 +0000</pubDate>
+      <dc:creator>Sathya Gunasekaran</dc:creator>
+      <guid>https://recompiled.dev/blog/ssa/</guid>
+    </item>
+    <item>
+      <title>Alias analysis in React Compiler</title>
+      <link>https://recompiled.dev/blog/alias-analysis/</link>
+      <description>The post describes the complexities of alias analysis in the React Compiler</description>
+      <pubDate>Mon, 22 Jan 2024 11:45:30 +0000</pubDate>
+      <dc:creator>Sathya Gunasekaran</dc:creator>
+      <guid>https://recompiled.dev/blog/alias-analysis/</guid>
+    </item>
+    <item>
+      <title>Side effecting a deopt</title>
+      <link>https://recompiled.dev/blog/deopt/</link>
+      <description>This article explains how a deoptimisation can occur as a side effect in Javascript, especially in v8.</description>
+      <pubDate>Tue, 19 Sep 2023 13:33:37 +0000</pubDate>
+      <dc:creator>Sathya Gunasekaran</dc:creator>
+      <guid>https://recompiled.dev/blog/deopt/</guid>
+    </item>
+    <item>
+      <title>Internationalization APIs in V8</title>
+      <link>https://recompiled.dev/blog/intl/</link>
+      <description>The JavaScript Internationalization API is growing, and its V8 implementation is getting faster!</description>
+      <pubDate>Thu, 25 Apr 2019 16:45:37 +0000</pubDate>
+      <dc:creator>Sathya Gunasekaran</dc:creator>
+      <guid>https://recompiled.dev/blog/intl/</guid>
+    </item>
+    <item>
+      <title>Optimizing hash tables in V8</title>
+      <link>https://recompiled.dev/blog/hash-code/</link>
+      <description>Several JavaScript data structures such as Map, Set, WeakSet, and WeakMap use hash tables under the hood. This article explains how V8 v6.3 improves hash table performance.</description>
+      <pubDate>Mon, 29 Jan 2018 13:33:37 +0000</pubDate>
+      <dc:creator>Sathya Gunasekaran</dc:creator>
+      <guid>https://recompiled.dev/blog/hash-code/</guid>
+    </item>
+  </channel>
+</rss>
