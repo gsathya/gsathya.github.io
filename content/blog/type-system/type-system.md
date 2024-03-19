@@ -141,6 +141,7 @@ like function application (ie, function call), and if-statements.
 The process of solving these type equations is called
 [unification](<https://en.wikipedia.org/wiki/Unification_(computer_science)>).
 The unification process attempts to find a substitution of type variables that
+makes all the type equations true.
 
 Solving the type equations for our example are pretty straightforward. The type variables for `subTotal`, `tax` and `total` can directly be substituted by the primitive type.
 

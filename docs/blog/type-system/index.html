@@ -528,7 +528,7 @@ span#name:hover:after {
 </ul>
 
 <div class="message-box">
-	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background. This post is for anyone curious about the compiler theory behind it. You don't need to understand everything in this post to use the compiler. </em></p>
+	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background. This post is for anyone curious about the compiler theory behind it. Don't feel pressured to understand everything in this post to use the compiler. </em></p>
 </div>
 <h2 id="memo-the-props" tabindex="-1">Memo the props <a class="header-anchor" href="#memo-the-props">#</a></h2>
 <p>In React, a component wrapped in <a href="https://react.dev/reference/react/memo">React.memo</a> only re-renders if its props change.</p>
@@ -605,7 +605,8 @@ like function application (ie, function call), and if-statements.</p>
 <h3 id="solving-the-equations" tabindex="-1">Solving the equations <a class="header-anchor" href="#solving-the-equations">#</a></h3>
 <p>The process of solving these type equations is called
 <a href="https://en.wikipedia.org/wiki/Unification_(computer_science)">unification</a>.
-The unification process attempts to find a substitution of type variables that</p>
+The unification process attempts to find a substitution of type variables that
+makes all the type equations true.</p>
 <p>Solving the type equations for our example are pretty straightforward. The type variables for <code>subTotal</code>, <code>tax</code> and <code>total</code> can directly be substituted by the primitive type.</p>
 <p>But consider the earlier statement that defines and initializes <code>subTotal</code>:</p>
 <pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> subTotal <span class="token operator">=</span> <span class="token function">calculateSubTotal</span><span class="token punctuation">(</span>items<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
