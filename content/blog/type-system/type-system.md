@@ -12,7 +12,7 @@ description: "The post describes how the type system of th React compiler is imp
 {%- css %}{% include "public/css/message-box.css" %}{% endcss %}
 
 <div class="message-box">
-	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background. This post is for anyone curious about the compiler theory behind it. You don't need to understand everything in this post to use the compiler. </em></p>
+	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background. This post is for anyone curious about the compiler theory behind it. Don't feel pressured to understand everything in this post to use the compiler. </em></p>
 </div>
 
 ## Memo the props

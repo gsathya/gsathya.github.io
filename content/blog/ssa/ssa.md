@@ -12,7 +12,7 @@ description: "The post describes how the React Compiler uses SSA form for fine g
 {%- css %}{% include "public/css/message-box.css" %}{% endcss %}
 
 <div class="message-box">
-	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background. This post is for anyone curious about the compiler theory behind it. You don't need to understand everything in this post to use the compiler. </em></p>
+	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background. This post is for anyone curious about the compiler theory behind it. Don't feel pressured to understand everything in this post to use the compiler. </em></p>
 </div>
 
 The React compiler implements numerous traditional compiler transformations,
@@ -24,8 +24,8 @@ Consider this simple React component:
 
 ```js
 function Component({ colours }) {
-	let styles = { colours };
-	return <Item styles={styles} />;
+  let styles = { colours };
+  return <Item styles={styles} />;
 }
 ```
 
@@ -33,21 +33,21 @@ We can easily memoize it like this:
 
 ```js
 function Component(props) {
-	const $ = useMemoCache(2);
-	const { colours } = props;
-	let t0;
+  const $ = useMemoCache(2);
+  const { colours } = props;
+  let t0;
 
-	if ($[0] !== colours) {
-		t0 = { colours };
+  if ($[0] !== colours) {
+    t0 = { colours };
 
-		$[0] = colours;
-		$[1] = t0;
-	} else {
-		t0 = $[1];
-	}
+    $[0] = colours;
+    $[1] = t0;
+  } else {
+    t0 = $[1];
+  }
 
-	const styles = t0;
-	return <Item styles={styles} />;
+  const styles = t0;
+  return <Item styles={styles} />;
 }
 ```
 
@@ -63,13 +63,13 @@ Now, let's say you want to refactor the styles based on a condition.
 
 ```js
 function Component({ colours, hover, hoverColours }) {
-	let styles;
-	if (!hover) {
-		styles = { colours };
-	} else {
-		styles = { colours: hoverColours };
-	}
-	return <Item styles={styles} />;
+  let styles;
+  if (!hover) {
+    styles = { colours };
+  } else {
+    styles = { colours: hoverColours };
+  }
+  return <Item styles={styles} />;
 }
 ```
 
@@ -82,26 +82,26 @@ The compiler can still track styles creation across both blocks and memoize it l
 
 ```js
 function Component(props) {
-	const $ = useMemoCache(4);
-	const { hover, colours, hoverColours } = props;
-	let styles;
+  const $ = useMemoCache(4);
+  const { hover, colours, hoverColours } = props;
+  let styles;
 
-	if ($[0] !== hover || $[1] !== colours || $[2] !== hoverColours) {
-		if (!hover) {
-			styles = { colours };
-		} else {
-			styles = { colours: hoverColours };
-		}
+  if ($[0] !== hover || $[1] !== colours || $[2] !== hoverColours) {
+    if (!hover) {
+      styles = { colours };
+    } else {
+      styles = { colours: hoverColours };
+    }
 
-		$[0] = hover;
-		$[1] = colours;
-		$[2] = hoverColours;
-		$[3] = styles;
-	} else {
-		styles = $[3];
-	}
+    $[0] = hover;
+    $[1] = colours;
+    $[2] = hoverColours;
+    $[3] = styles;
+  } else {
+    styles = $[3];
+  }
 
-	return <Item styles={styles} />;
+  return <Item styles={styles} />;
 }
 ```
 
@@ -162,14 +162,14 @@ Well, let's consider another example:
 
 ```js
 function Component({ colours, hover, hoverColours }) {
-	let styles;
-	if (!hover) {
-		styles = { colours };
-	} else {
-		styles = { colours: hoverColours };
-	}
-	styles.height = "large"; // <-- modifying styles object
-	return <Item styles={styles} />;
+  let styles;
+  if (!hover) {
+    styles = { colours };
+  } else {
+    styles = { colours: hoverColours };
+  }
+  styles.height = "large"; // <-- modifying styles object
+  return <Item styles={styles} />;
 }
 ```
 
@@ -205,23 +205,23 @@ The compiler can now infer that the `styles` can only be memoized at a coarser l
 
 ```js
 if ($[0] !== hover || $[1] !== colours || $[2] !== hoverColours) {
-	if (!hover) {
-		styles = {
-			colours,
-		};
-	} else {
-		styles = {
-			colours: hoverColours,
-		};
-	}
+  if (!hover) {
+    styles = {
+      colours,
+    };
+  } else {
+    styles = {
+      colours: hoverColours,
+    };
+  }
 
-	styles.height = "large";
-	$[0] = hover;
-	$[1] = colours;
-	$[2] = hoverColours;
-	$[3] = styles;
+  styles.height = "large";
+  $[0] = hover;
+  $[1] = colours;
+  $[2] = hoverColours;
+  $[3] = styles;
 } else {
-	styles = $[3];
+  styles = $[3];
 }
 ```
 
