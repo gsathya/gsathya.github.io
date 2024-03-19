@@ -122,10 +122,10 @@ And concretely, the typing rule we defined above can be generated like this:
 function* generateTypeEquationsForBinaryExpression(instruction) {
   const { operands, lvalue } = instruction;
 
-  yield { left: operand[0].type, right: { kind: "Primitive" } };
+  yield { left: operands[0].type, right: { kind: "Primitive" } };
   // subTotal -> primitive
 
-  yield { left: operand[1].type, right: { kind: "Primitive" } };
+  yield { left: operands[1].type, right: { kind: "Primitive" } };
   // tax -> primitive
 
   yield { left: { lvalue.type }, right: { kind: "Primitive" } };
