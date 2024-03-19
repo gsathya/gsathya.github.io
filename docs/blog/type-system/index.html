@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Type system of the React compiler</title>
+		<meta name="description" content="The post describes how the type system of th React compiler is implemented and used">
+		<link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Recompiled">
+		<link rel="alternate" href="/feed/feed.json" type="application/json" title="Recompiled">
+		<meta name="generator" content="Eleventy v2.0.1">
+		
+		<style>/* Message Box */
+.message-box {
+	--color-message-box: #ffc;
+
+	display: block;
+	background-color: var(--color-message-box);
+	color: var(--color-gray-90);
+	padding: 1em 0.625em; /* 16px 10px /16 */
+	margin: 0.5em;
+}
+
+@media (prefers-color-scheme: dark) {
+	.message-box {
+		--color-message-box: #021e36;
+	}
+}
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #8292a2;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+/*
+ * New diff- syntax
+ */
+
+pre[class*="language-diff-"] {
+	--eleventy-code-padding: 1.25em;
+	padding-left: var(--eleventy-code-padding);
+	padding-right: var(--eleventy-code-padding);
+}
+.token.deleted {
+	background-color: hsl(0, 51%, 37%);
+	color: inherit;
+}
+.token.inserted {
+	background-color: hsl(126, 31%, 39%);
+	color: inherit;
+}
+
+/* Make the + and - characters unselectable for copy/paste */
+.token.prefix.unchanged,
+.token.prefix.inserted,
+.token.prefix.deleted {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.token.prefix.inserted,
+.token.prefix.deleted {
+	width: var(--eleventy-code-padding);
+	background-color: rgba(0,0,0,.2);
+}
+
+/* Optional: full-width background color */
+.token.inserted:not(.prefix),
+.token.deleted:not(.prefix) {
+	display: block;
+	margin-left: calc(-1 * var(--eleventy-code-padding));
+	margin-right: calc(-1 * var(--eleventy-code-padding));
+	text-decoration: none; /* override del, ins, mark defaults */
+	color: inherit; /* override del, ins, mark defaults */
+}
+* { box-sizing: border-box; }
+/* Defaults */
+:root {
+	--font-family: -apple-system, system-ui, sans-serif;
+	--font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono,
+		Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono,
+		Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New,
+		Courier, monospace;
+}
+
+/* Theme colors */
+:root {
+	--color-gray-20: #e0e0e0;
+	--color-gray-50: #c0c0c0;
+	--color-gray-90: #333;
+
+	--background-color: #fff;
+
+	--text-color: var(--color-gray-90);
+	--text-color-link: #082840;
+	--text-color-link-active: #5f2b48;
+	--text-color-link-visited: #17050f;
+
+	--syntax-tab-size: 2;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-gray-20: #e0e0e0;
+		--color-gray-50: #c0c0c0;
+		--color-gray-90: #dad8d8;
+
+		/* --text-color is assigned to --color-gray-_ above */
+		--text-color-link: #1493fb;
+		--text-color-link-active: #6969f7;
+		--text-color-link-visited: #a6a6f8;
+
+		--darkblue: #011627;
+		--image-filter: grayscale(50%);
+	}
+}
+
+/* Global stylesheet */
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0 auto;
+	font-family: var(--font-family);
+	color: var(--text-color);
+	background-color: var(--darkblue);
+}
+body {
+	max-width: 50em;
+}
+html {
+	overflow-y: scroll;
+}
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+p:last-child {
+	margin-bottom: 0;
+}
+p {
+	line-height: 1.5;
+}
+
+li {
+	line-height: 1.5;
+}
+
+a[href] {
+	color: var(--text-color-link);
+}
+a[href]:visited {
+	color: var(--text-color-link-visited);
+}
+a[href]:hover,
+a[href]:active {
+	color: var(--text-color-link-active);
+}
+
+main {
+	padding: 1rem;
+}
+main :first-child {
+	margin-top: 0;
+}
+
+header {
+	border-bottom: 1px dashed var(--color-gray-20);
+}
+header:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.links-nextprev {
+	list-style: none;
+	border-top: 1px dashed var(--color-gray-20);
+	padding: 1em 0;
+}
+
+table {
+	margin: 1em 0;
+}
+table td,
+table th {
+	padding-right: 1em;
+}
+
+pre,
+code {
+	font-family: var(--font-family-monospace);
+}
+pre:not([class*="language-"]) {
+	margin: 0.5em 0;
+	line-height: 1.375; /* 22px /16 */
+	-moz-tab-size: var(--syntax-tab-size);
+	-o-tab-size: var(--syntax-tab-size);
+	tab-size: var(--syntax-tab-size);
+	-webkit-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+}
+code {
+	word-break: break-all;
+}
+
+/* Header */
+header {
+	display: flex;
+	gap: 1em 0.5em;
+	flex-wrap: wrap;
+	align-items: center;
+	padding: 1em;
+}
+.home-link {
+	font-size: 1em; /* 16px /16 */
+	font-weight: 700;
+	margin-right: 2em;
+}
+.home-link:link:not(:hover) {
+	text-decoration: none;
+}
+
+/* Nav */
+.nav {
+	display: flex;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.nav-item {
+	display: inline-block;
+	margin-right: 1em;
+}
+.nav-item a[href]:not(:hover) {
+	text-decoration: none;
+}
+.nav a[href][aria-current="page"] {
+	text-decoration: underline;
+}
+.nav-item.icon {
+	margin-right: 0.5em;
+}
+
+/* Posts list */
+.postlist {
+	list-style: none;
+	padding: 0;
+}
+.postlist-item {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	counter-increment: start-from -1;
+	margin-bottom: 1em;
+}
+.postlist-date {
+	font-size: 0.8125em; /* 13px /16 */
+	color: var(--color-gray-90);
+}
+.postlist-date {
+	word-spacing: -0.5px;
+}
+.postlist-link {
+	font-size: 1.1875em; /* 19px /16 */
+	font-weight: 700;
+	flex-basis: calc(100% - 1.5rem);
+	text-underline-position: from-font;
+	text-underline-offset: 0;
+	text-decoration-thickness: 1px;
+}
+.postlist-item-active .postlist-link {
+	font-weight: bold;
+}
+.postlist-event {
+	font-size: 0.8125em; /* 13px /16 */
+	color: var(--color-gray-90);
+	word-spacing: -0.5px;
+}
+
+/* Tags */
+.post-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: capitalize;
+	font-style: italic;
+}
+.postlist-item > .post-tag {
+	align-self: center;
+}
+
+/* Tags list */
+.post-metadata {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.post-metadata time {
+	margin-right: 1em;
+}
+
+/* Direct Links / Markdown Headers */
+.header-anchor {
+	text-decoration: none;
+	font-style: normal;
+	font-size: 1em;
+	margin-left: 0.1em;
+}
+a[href].header-anchor,
+a[href].header-anchor:visited {
+	color: transparent;
+}
+a[href].header-anchor:focus,
+a[href].header-anchor:hover {
+	text-decoration: underline;
+}
+a[href].header-anchor:focus,
+:hover > a[href].header-anchor {
+	color: #aaa;
+}
+
+img,
+svg {
+	display: block;
+	margin: 0 auto;
+	max-width: 100%;
+	height: auto;
+	@media (prefers-color-scheme: dark) {
+		filter: invert(0.862745) hue-rotate(180deg);
+	}
+}
+h2 + .header-anchor {
+	font-size: 1.5em;
+}
+
+span#name:after {
+	content: "Sathya Gunasekaran";
+}
+span#name:hover:after {
+	content: "சத்யா குணசேகரன்";
+}
+
+#title-text {
+	min-height: 2em;
+}</style>
+
+		<meta name="twitter:site" content="@_gsathya">
+		<meta name="twitter:title" content="Type system of the React compiler">
+		<meta name="twitter:description" content="The post describes how the type system of th React compiler is implemented and used">
+
+	</head>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-HNCTVD2H2Q"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-HNCTVD2H2Q');
+	</script>
+	<body>
+		<a href="#skip" class="visually-hidden">Skip to main content</a>
+
+		<header>
+			<a href="/" class="home-link">Recompiled</a>
+			<nav>
+				<h2 class="visually-hidden">Top level navigation menu</h2>
+				<ul class="nav">
+					<li class="nav-item"><a href="/blog/">Blog</a></li>
+					<li class="nav-item"><a href="/talks/">Talks</a></li>
+					<li class="nav-item"><a href="/about/">About Me</a></li>
+					<li class="nav-item icon"><a href="https://github.com/gsathya" target="_blank"><img alt="github" src="/img/github.png" width="20" height="20"></a></li>
+					<li class="nav-item icon"><a href="https://twitter.com/_gsathya" target="_blank"><img alt="twitter" src="/img/twitter.png" width="20" height="20"></a></li>
+					<li class="nav-item icon"><a href="https://linkedin.com/in/sathyagunasekaran" target="_blank"><img alt="linkedin" src="/img/linkedin.png" width="20" height="20"></a></li>
+				</ul>
+			</nav>
+		</header>
+
+		<main id="skip">
+			
+<h1>Type system of the React compiler</h1>
+
+<ul class="post-metadata">
+	<li><time datetime="2024-03-19">19 March 2024</time></li>
+	<li><a href="/tags/forget/" class="post-tag">Forget</a>, </li>
+	<li><a href="/tags/react/" class="post-tag">React</a>, </li>
+	<li><a href="/tags/compiler/" class="post-tag">Compiler</a></li>
+</ul>
+
+<div class="message-box">
+	<p><em>If you're wondering what the React compiler is, I recommend reading our recent <a href="https://react.dev/blog/2024/02/15/react-labs-what-we-have-been-working-on-february-2024#react-compiler">update post</a> for some background. This post is for anyone curious about the compiler theory behind it. You don't need to understand everything in this post to use the compiler. </em></p>
+</div>
+<h2 id="memo-the-props" tabindex="-1">Memo the props <a class="header-anchor" href="#memo-the-props">#</a></h2>
+<p>In React, a component wrapped in <a href="https://react.dev/reference/react/memo">React.memo</a> only re-renders if its props change.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> Greeting <span class="token operator">=</span> <span class="token function">memo</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token function">Greeting</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> user <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span>h1<span class="token operator">></span>
+      Hello<span class="token punctuation">,</span> <span class="token punctuation">{</span>user<span class="token punctuation">.</span>firstName<span class="token punctuation">}</span> <span class="token punctuation">{</span>user<span class="token punctuation">.</span>lastName<span class="token punctuation">}</span><span class="token operator">!</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>h1<span class="token operator">></span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><code>Greeting</code> re-renders whenever its prop, <code>user</code> <em>changes</em>. React uses <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is">shallow comparison</a> to determine if the props have changed.</p>
+<p>In JavaScript, objects must maintain their identity to make the shallow comparison work, which is why <a href="https://react.dev/reference/react/memo#minimizing-props-changes">memoization can be cruical</a>. On the other hand, primitive values don't have any identity associated with them and can simply be compared directly.</p>
+<pre class="language-js" tabindex="0"><code class="language-js">Object<span class="token punctuation">.</span><span class="token function">is</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// false</span>
+Object<span class="token punctuation">.</span><span class="token function">is</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// true</span></code></pre>
+<p>Consider a simple component that calculates a total based on props:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Price</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> items<span class="token punctuation">,</span> state <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> subTotal <span class="token operator">=</span> <span class="token function">calculateSubTotal</span><span class="token punctuation">(</span>items<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> tax <span class="token operator">=</span> <span class="token function">calculateTax</span><span class="token punctuation">(</span>subTotal<span class="token punctuation">,</span> state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> total <span class="token operator">=</span> subTotal <span class="token operator">+</span> tax<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token operator">&lt;</span>Text text<span class="token operator">=</span><span class="token punctuation">{</span>total<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>One naive way to prevent <code>Text</code> from re-rendering unnecessarily would be memoize everything like this:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Price</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> items<span class="token punctuation">,</span> state <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> subTotal <span class="token operator">=</span> <span class="token function">useMemo</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token function">calculateSubTotal</span><span class="token punctuation">(</span>items<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>items<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> tax <span class="token operator">=</span> <span class="token function">useMemo</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token function">calculateTax</span><span class="token punctuation">(</span>subTotal<span class="token punctuation">,</span> state<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>subTotal<span class="token punctuation">,</span> state<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> total <span class="token operator">=</span> <span class="token function">useMemo</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> subTotal <span class="token operator">+</span> tax<span class="token punctuation">,</span> <span class="token punctuation">[</span>subTotal<span class="token punctuation">,</span> tax<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token operator">&lt;</span>Text text<span class="token operator">=</span><span class="token punctuation">{</span>total<span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>However, we don't really need to memoize primitives for shallow comparison. The memoization here is wasteful from both a memory and a bundle size perspective.</p>
+<p>Can we teach the React compiler that these are primitive values? The React compiler could perform whole program analysis by compiling <em>all</em> the files, including the files containing <code>calculateSubTotal</code> and <code>calculateTax</code> to understand that they return a number. But, single file analysis has a bunch of really nice advantages like better performance, incremental rollout and lower compiler complexity.</p>
+<p>Can the compiler <em>infer</em> that these are numbers from the way they are used?</p>
+<h2 id="type-inference" tabindex="-1">Type inference <a class="header-anchor" href="#type-inference">#</a></h2>
+<p>One of the most classical type systems is the <a href="https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">Hindley Milner type system</a> that's typically used in functional languages. The type inference in the React compiler is inspired by the <a href="https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system#Algorithm_W">Algorithm W</a> of this type system, but it's much simpler because JavaScript is too dynamic for sound typing. I'll briefly describe the various steps as implemented by the React compiler.</p>
+<h3 id="initializing-the-type-variables" tabindex="-1">Initializing the type variables <a class="header-anchor" href="#initializing-the-type-variables">#</a></h3>
+<p>During the initial lowering from JavaScript source to the compiler's intermediate representation, every identifier gets an associated <code>Type</code> variable to store the type. A <code>Type</code> variable is just like any other variable but instead of storing values, we store types in them.</p>
+<pre class="language-js" tabindex="0"><code class="language-js">type Type <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">kind</span><span class="token operator">:</span> <span class="token string">"type"</span><span class="token punctuation">,</span> <span class="token literal-property property">id</span><span class="token operator">:</span> number <span class="token punctuation">}</span> <span class="token operator">|</span> <span class="token punctuation">{</span> <span class="token literal-property property">kind</span><span class="token operator">:</span> <span class="token string">"Primitive"</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">// { kind: "Type", id: number } represents a type variable</span>
+<span class="token comment">// { kind: "Primitive" } represents a primitive type</span>
+
+<span class="token keyword">let</span> total<span class="token punctuation">;</span> <span class="token comment">// identifier: { name: 'total', type: { kind: "Type", id: 0 } }</span></code></pre>
+<p><code>{ kind: &quot;Type&quot;, id: 0 }</code> is the Type variable associated with the identifier <code>total</code>.</p>
+<h3 id="generating-the-type-equations" tabindex="-1">Generating the type equations <a class="header-anchor" href="#generating-the-type-equations">#</a></h3>
+<p>Rather than specifying the type system in scary and not so accessible formal notation, I'll try to explain one of the typing rules using our earlier example.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> total <span class="token operator">=</span> subTotal <span class="token operator">+</span> tax<span class="token punctuation">;</span></code></pre>
+<p>The above statement can be typed by saying that the operands of a <code>BinaryExpression</code> with an <code>Arithmetic</code> operator are primitives and the resulting value is also a primitive. In our example, <code>subTotal</code> and <code>tax</code> are the operands, the operator is <code>+</code> and the return value is <code>total</code>.</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> total <span class="token operator">=</span> subTotal <span class="token operator">+</span> tax<span class="token punctuation">;</span>
+<span class="token comment">// subTotal -> primitive</span>
+<span class="token comment">// tax      -> primitive</span>
+<span class="token comment">// total    -> primitive</span></code></pre>
+<div class="message-box">
+	<p><em>It's possible to use non-primitives as operands of a <code>BinaryExpression</code> in JavaScript but this has been a safe assumption in practice.</em></p>
+</div>
+<p>The first step of the type inference pass is to generate type equations based on the typing rules defined by the compiler. A type equation is simply a statement of equality between two types, like a mathematical equation. A simple type equation can be of the form &quot;<code>left = right</code>&quot;, where <code>left</code> and <code>right</code> are types.</p>
+<p>In code, it can be as simple as an object with two fields representing the left hand side and right hand side of the equation, like this:</p>
+<pre class="language-ts" tabindex="0"><code class="language-ts"><span class="token keyword">type</span> <span class="token class-name">TypeEquation</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  left<span class="token operator">:</span> Type<span class="token punctuation">;</span>
+  right<span class="token operator">:</span> Type<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<p>And concretely, the typing rule we defined above can be generated like this:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span><span class="token operator">*</span> <span class="token function">generateTypeEquationsForBinaryExpression</span><span class="token punctuation">(</span><span class="token parameter">instruction</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> operands<span class="token punctuation">,</span> lvalue <span class="token punctuation">}</span> <span class="token operator">=</span> instruction<span class="token punctuation">;</span>
+
+  <span class="token keyword">yield</span> <span class="token punctuation">{</span> <span class="token literal-property property">left</span><span class="token operator">:</span> operand<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>type<span class="token punctuation">,</span> <span class="token literal-property property">right</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">kind</span><span class="token operator">:</span> <span class="token string">"Primitive"</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token comment">// subTotal -> primitive</span>
+
+  <span class="token keyword">yield</span> <span class="token punctuation">{</span> <span class="token literal-property property">left</span><span class="token operator">:</span> operand<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>type<span class="token punctuation">,</span> <span class="token literal-property property">right</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">kind</span><span class="token operator">:</span> <span class="token string">"Primitive"</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token comment">// tax -> primitive</span>
+
+  <span class="token keyword">yield</span> <span class="token punctuation">{</span> <span class="token literal-property property">left</span><span class="token operator">:</span> <span class="token punctuation">{</span> lvalue<span class="token punctuation">.</span>type <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token literal-property property">right</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">kind</span><span class="token operator">:</span> <span class="token string">"Primitive"</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token comment">// total -> primitive</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Similarly type equations can be generated for other constructs in JavaScript
+like function application (ie, function call), and if-statements.</p>
+<h3 id="solving-the-equations" tabindex="-1">Solving the equations <a class="header-anchor" href="#solving-the-equations">#</a></h3>
+<p>The process of solving these type equations is called
+<a href="https://en.wikipedia.org/wiki/Unification_(computer_science)">unification</a>.
+The unification process attempts to find a substitution of type variables that</p>
+<p>Solving the type equations for our example are pretty straightforward. The type variables for <code>subTotal</code>, <code>tax</code> and <code>total</code> can directly be substituted by the primitive type.</p>
+<p>But consider the earlier statement that defines and initializes <code>subTotal</code>:</p>
+<pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">const</span> subTotal <span class="token operator">=</span> <span class="token function">calculateSubTotal</span><span class="token punctuation">(</span>items<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>At the point of defining <code>subTotal</code>, we don't know its type. Only after we look
+at the usage of <code>subTotal</code> have we inferred that this is a primitive.</p>
+<p>But in this type inference, the types flow back to the definition as well. We go back to the definition and notice that the return type of the function <code>calculateSubTotal</code> must be the same type as <code>subTotal</code>. And by solving this, we've now inferred that the return type of <code>calculateSubTotal</code> must be a primitive.</p>
+<p>This is an example of how incredibly powerful type inference can be! We've inferred the return type of a function that exists in a separate compilation unit without having looked at it's implementation. Type systems often use this inference to boostrap and quickly start expanding inference across an untyped codebase.</p>
+<p>But it does come with a significant downside -- if the inference is incorrect,
+it results in a surprising “action-at-a-distance” behaviors. This is why
+<a href="https://flow.org/">Flow</a> moved to <a href="https://medium.com/flow-type/local-type-inference-for-flow-aaa65d071347">local type
+inference</a>,
+which trades more explicit type annotations for better errors.</p>
+<div class="message-box">
+	<p><em> We could've made the compiler use the type information from Typescript or Flow, but we wanted to make sure it worked well for untyped JavaScript too. We do plan to add support for these type systems in the future for more optimal memoization.</em></p>
+</div>
+<h2 id="typing-react" tabindex="-1">Typing React <a class="header-anchor" href="#typing-react">#</a></h2>
+<p>Once we had the type system, it quickly became clear that we could use it as a platform to do various other analysis too.</p>
+<p>Adding validations for certain rules of react became as easy as adding a few typing rules to our type system. For example, rather than building separate validations for each React API, just adding the typing rules for <code>useState</code> hook gives us this validation:</p>
+<pre class="language-js" tabindex="0"><code class="language-js">  <span class="token number">1</span> <span class="token operator">|</span> <span class="token keyword">const</span> <span class="token punctuation">[</span>state<span class="token punctuation">,</span> setState<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">foo</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">bar</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token number">2</span> <span class="token operator">|</span> <span class="token keyword">const</span> foo <span class="token operator">=</span> state<span class="token punctuation">.</span>foo<span class="token punctuation">;</span>
+<span class="token operator">></span> <span class="token number">3</span> <span class="token operator">|</span> foo<span class="token punctuation">.</span>bar <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token operator">|</span> <span class="token operator">^</span><span class="token operator">^</span><span class="token operator">^</span> InvalidReact<span class="token operator">:</span> Mutating a value returned <span class="token keyword">from</span> <span class="token string">'useState()'</span><span class="token punctuation">,</span>
+          which should not be mutated<span class="token punctuation">.</span> Use the setter <span class="token keyword">function</span> to
+          update instead<span class="token punctuation">.</span></code></pre>
+<p>Note how even interior mutability is caught here -- not just simply a modification to <code>state</code>, but a modification to <code>state.foo</code> through an aliased variable (<code>foo</code>).</p>
+<h2 id="further-reading" tabindex="-1">Further reading <a class="header-anchor" href="#further-reading">#</a></h2>
+<p>If you're curious to learn more about type systems, the original Hindley Milner
+type system papers and the more recent <a href="https://arxiv.org/abs/1306.6032">Local Type
+Inference</a> paper are great places to start.</p>
+
+<ul class="links-nextprev"><li>Previous: <a href="/blog/ssa/">Compiler Theory and Reactivity</a></li>
+</ul>
+
+		</main>
+
+		<footer></footer>
+
+		<!-- Current page: /blog/type-system/ -->
+	</body>
+</html>

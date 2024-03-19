@@ -32,17 +32,17 @@
 	</url>
 	
 	<url>
+		<loc>https://www.recompiled.dev/tags/v8/</loc>
+		<lastmod>2023-07-28</lastmod>
+	</url>
+	
+	<url>
 		<loc>https://www.recompiled.dev/tags/ecmascript/</loc>
 		<lastmod>2023-07-28</lastmod>
 	</url>
 	
 	<url>
 		<loc>https://www.recompiled.dev/tags/intl/</loc>
-		<lastmod>2023-07-28</lastmod>
-	</url>
-	
-	<url>
-		<loc>https://www.recompiled.dev/tags/v8/</loc>
 		<lastmod>2023-07-28</lastmod>
 	</url>
 	
@@ -79,5 +79,10 @@
 	<url>
 		<loc>https://www.recompiled.dev/blog/ssa/</loc>
 		<lastmod>2024-02-22</lastmod>
+	</url>
+	
+	<url>
+		<loc>https://www.recompiled.dev/blog/type-system/</loc>
+		<lastmod>2024-03-19</lastmod>
 	</url>
 </urlset>
