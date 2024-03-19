@@ -1,5 +1,5 @@
 ---
-title: "Alias analysis in React Compiler"
+title: "Alias analysis in the React Compiler"
 author: "[சத்யா குணசேகரன் (Sathya Gunasekaran)](https://twitter.com/_gsathya)"
 date: 2024-01-22 11:45:30
 tags:

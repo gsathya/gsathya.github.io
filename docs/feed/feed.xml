@@ -29,7 +29,7 @@
   &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;code&gt;Greeting&lt;/code&gt; re-renders whenever its prop, &lt;code&gt;user&lt;/code&gt; &lt;em&gt;changes&lt;/em&gt;. React uses &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is&quot;&gt;shallow comparison&lt;/a&gt; to determine if the props have changed.&lt;/p&gt;
-&lt;p&gt;In JavaScript, objects must maintain their identity to make the shallow comparison work, which is why &lt;a href=&quot;https://react.dev/reference/react/memo#minimizing-props-changes&quot;&gt;memoization can be cruical&lt;/a&gt;. On the other hand, primitive values don&#39;t have any identity associated with them and can simply be compared directly.&lt;/p&gt;
+&lt;p&gt;In JavaScript, objects must maintain their identity to make the shallow comparison work, which is why &lt;a href=&quot;https://react.dev/reference/react/memo#minimizing-props-changes&quot;&gt;memoization can be crucial&lt;/a&gt;. On the other hand, primitive values don&#39;t have any identity associated with them and can simply be compared directly.&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;Object&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// false&lt;/span&gt;
 Object&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;is&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;// true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Consider a simple component that calculates a total based on props:&lt;/p&gt;
@@ -328,7 +328,7 @@ a look at the &lt;a href=&quot;https://www.recompiled.dev/tags/forget/&quot;&gt;
 	</entry>
 	
 	<entry>
-		<title>Alias analysis in React Compiler</title>
+		<title>Alias analysis in the React Compiler</title>
 		<link href="https://www.recompiled.dev/blog/alias-analysis/"/>
 		<updated>2024-01-22T11:45:30Z</updated>
 		<id>https://www.recompiled.dev/blog/alias-analysis/</id>

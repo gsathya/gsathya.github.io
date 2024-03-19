@@ -23,7 +23,7 @@
       <guid>https://recompiled.dev/blog/ssa/</guid>
     </item>
     <item>
-      <title>Alias analysis in React Compiler</title>
+      <title>Alias analysis in the React Compiler</title>
       <link>https://recompiled.dev/blog/alias-analysis/</link>
       <description>The post describes the complexities of alias analysis in the React Compiler</description>
       <pubDate>Mon, 22 Jan 2024 11:45:30 +0000</pubDate>

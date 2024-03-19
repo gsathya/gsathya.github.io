@@ -31,7 +31,7 @@ const Greeting = memo(function Greeting({ user }) {
 
 `Greeting` re-renders whenever its prop, `user` _changes_. React uses [shallow comparison](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) to determine if the props have changed.
 
-In JavaScript, objects must maintain their identity to make the shallow comparison work, which is why [memoization can be cruical](https://react.dev/reference/react/memo#minimizing-props-changes). On the other hand, primitive values don't have any identity associated with them and can simply be compared directly.
+In JavaScript, objects must maintain their identity to make the shallow comparison work, which is why [memoization can be crucial](https://react.dev/reference/react/memo#minimizing-props-changes). On the other hand, primitive values don't have any identity associated with them and can simply be compared directly.
 
 ```js
 Object.is({}, {}); // false
