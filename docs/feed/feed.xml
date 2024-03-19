@@ -113,7 +113,7 @@ trading more explicit type annotations for better errors.&lt;/p&gt;
 &lt;/div&gt;
 &lt;h2 id=&quot;don-t-memo-the-props&quot; tabindex=&quot;-1&quot;&gt;(Don&#39;t) Memo the props &lt;a class=&quot;header-anchor&quot; href=&quot;https://www.recompiled.dev/blog/type-system/&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Now, going back to our original example of the &lt;code&gt;Price&lt;/code&gt; component, the compiler can
-infer that all the values are primitives and there&#39;s actually no need to memoize
+infer that all the values are primitives. There&#39;s actually no need to memoize
 &lt;code&gt;total&lt;/code&gt;, &lt;code&gt;subTotal&lt;/code&gt; or &lt;code&gt;tax&lt;/code&gt; in this &lt;code&gt;Price&lt;/code&gt; component, saving bundle size and
 memory!&lt;/p&gt;
 &lt;pre class=&quot;language-js&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;Price&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;t0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;

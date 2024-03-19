@@ -171,7 +171,7 @@ trading more explicit type annotations for better errors.
 ## (Don't) Memo the props
 
 Now, going back to our original example of the `Price` component, the compiler can
-infer that all the values are primitives and there's actually no need to memoize
+infer that all the values are primitives. There's actually no need to memoize
 `total`, `subTotal` or `tax` in this `Price` component, saving bundle size and
 memory!
 

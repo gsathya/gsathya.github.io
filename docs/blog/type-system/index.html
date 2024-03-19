@@ -624,7 +624,7 @@ trading more explicit type annotations for better errors.</p>
 </div>
 <h2 id="don-t-memo-the-props" tabindex="-1">(Don't) Memo the props <a class="header-anchor" href="#don-t-memo-the-props">#</a></h2>
 <p>Now, going back to our original example of the <code>Price</code> component, the compiler can
-infer that all the values are primitives and there's actually no need to memoize
+infer that all the values are primitives. There's actually no need to memoize
 <code>total</code>, <code>subTotal</code> or <code>tax</code> in this <code>Price</code> component, saving bundle size and
 memory!</p>
 <pre class="language-js" tabindex="0"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Price</span><span class="token punctuation">(</span><span class="token parameter">t0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
