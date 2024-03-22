@@ -200,7 +200,7 @@ function Price(t0) {
 
 Once we had the type system, it quickly became clear that we could use it as a platform to do various other analyses too.
 
-Adding validations for certain rules of react became as easy as adding a few typing rules to our type system. For example, rather than building separate validations for each React API, just adding the typing rules for `useState` hook gives us this validation:
+Adding validations for certain [rules of react](https://react.dev/reference/react#rules-of-react) became as easy as adding a few typing rules to our type system. For example, rather than building separate validations for each React API, just adding the typing rules for `useState` hook gives us this validation:
 
 ```js
   1 | const [state, setState] = useState({ foo: { bar: {} } });

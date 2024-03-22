@@ -34,7 +34,7 @@
       <title>Side effecting a deopt</title>
       <link>https://recompiled.dev/blog/deopt/</link>
       <description>This article explains how a deoptimisation can occur as a side effect in Javascript, especially in v8.</description>
-      <pubDate>Tue, 19 Sep 2023 13:33:37 +0000</pubDate>
+      <pubDate>Tue, 19 Sep 2023 14:33:37 +0000</pubDate>
       <dc:creator>Sathya Gunasekaran</dc:creator>
       <guid>https://recompiled.dev/blog/deopt/</guid>
     </item>
@@ -42,7 +42,7 @@
       <title>Internationalization APIs in V8</title>
       <link>https://recompiled.dev/blog/intl/</link>
       <description>The JavaScript Internationalization API is growing, and its V8 implementation is getting faster!</description>
-      <pubDate>Thu, 25 Apr 2019 16:45:37 +0000</pubDate>
+      <pubDate>Thu, 25 Apr 2019 17:45:37 +0000</pubDate>
       <dc:creator>Sathya Gunasekaran</dc:creator>
       <guid>https://recompiled.dev/blog/intl/</guid>
     </item>
