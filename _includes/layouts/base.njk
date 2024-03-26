@@ -33,6 +33,7 @@
 		{#- Renders the CSS bundle using a separate file, if you can't set CSP directive style-src: 'unsafe-inline' #}
 		{#- <link rel="stylesheet" href="{% getBundleFileUrl "css" %}"> #}
 
+		<meta name="author" content="{{ metadata.author.name }}">
 		<meta name="twitter:site" content="{{ metadata.author.twitter }}">
 		<meta name="twitter:title" content="{{ title or metadata.title }}">
 		<meta name="twitter:description" content="{{ description or metadata.description }}">
